@@ -1,5 +1,6 @@
 package cn.tuxi.automation.domain;
 
+import cn.tuxi.automation.service.impl.NicheAnalysisServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,7 +9,7 @@ class NicheAnalysisServiceTest {
 
     @Test
     void scoresVirtualCommerceNicheAsPriorityWhenDemandAndDeliveryFit() {
-        NicheAnalysisService service = new NicheAnalysisService();
+        NicheAnalysisServiceImpl service = new NicheAnalysisServiceImpl();
         ProjectInput input = new ProjectInput(
                 "小红书虚拟电商",
                 "想做副业的新手",
@@ -28,7 +29,7 @@ class NicheAnalysisServiceTest {
 
     @Test
     void lowersRiskScoreForSensitiveNiche() {
-        NicheAnalysisService service = new NicheAnalysisService();
+        NicheAnalysisServiceImpl service = new NicheAnalysisServiceImpl();
         ProjectInput input = new ProjectInput(
                 "投资理财资料",
                 "想赚钱的新手",

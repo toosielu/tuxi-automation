@@ -1,7 +1,4 @@
-package cn.tuxi.automation.application;
-
-import cn.tuxi.automation.domain.MatchedProduct;
-import cn.tuxi.automation.domain.NicheAnalysis;
+package cn.tuxi.automation.domain;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cn.tuxi.automation.api;
+package cn.tuxi.automation.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

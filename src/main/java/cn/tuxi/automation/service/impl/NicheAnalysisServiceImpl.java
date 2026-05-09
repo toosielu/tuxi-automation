@@ -1,7 +1,14 @@
-package cn.tuxi.automation.domain;
+package cn.tuxi.automation.service.impl;
 
-public class NicheAnalysisService {
+import cn.tuxi.automation.domain.NicheAnalysis;
+import cn.tuxi.automation.domain.ProjectInput;
+import cn.tuxi.automation.service.NicheAnalysisService;
+import org.springframework.stereotype.Service;
 
+@Service
+public class NicheAnalysisServiceImpl implements NicheAnalysisService {
+
+    @Override
     public NicheAnalysis analyze(ProjectInput input) {
         String text = normalize(input.niche()) + " " + normalize(input.audience()) + " " + normalize(input.goal()) + " " + normalize(input.pain());
         boolean hasUrgentDemand = containsAny(text, "副业", "赚钱", "变现", "考证", "育儿", "效率", "简历", "小红书", "资料", "模板", "AI", "求职");

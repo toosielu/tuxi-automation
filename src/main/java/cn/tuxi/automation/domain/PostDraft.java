@@ -1,4 +1,4 @@
-package cn.tuxi.automation.application;
+package cn.tuxi.automation.domain;
 
 public record PostDraft(
         String angle,

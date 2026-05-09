@@ -1,4 +1,4 @@
-package cn.tuxi.automation.application;
+package cn.tuxi.automation.domain;
 
 import java.time.Instant;
 

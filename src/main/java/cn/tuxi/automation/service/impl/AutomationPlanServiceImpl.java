@@ -1,29 +1,52 @@
-package cn.tuxi.automation.application;
+package cn.tuxi.automation.service.impl;
 
+import cn.tuxi.automation.domain.AutomationPlan;
 import cn.tuxi.automation.domain.MatchedProduct;
 import cn.tuxi.automation.domain.NicheAnalysis;
-import cn.tuxi.automation.domain.NicheAnalysisService;
+import cn.tuxi.automation.domain.PlanRequest;
+import cn.tuxi.automation.domain.PostDraft;
 import cn.tuxi.automation.domain.Product;
-import cn.tuxi.automation.domain.ProductMatchingService;
 import cn.tuxi.automation.domain.ProjectInput;
+import cn.tuxi.automation.domain.StoreCopy;
+import cn.tuxi.automation.service.AutomationPlanService;
+import cn.tuxi.automation.service.NicheAnalysisService;
+import cn.tuxi.automation.service.ProductMatchingService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 
 @Service
-public class AutomationPlanService {
-    private final NicheAnalysisService nicheAnalysisService = new NicheAnalysisService();
-    private final ProductMatchingService productMatchingService = new ProductMatchingService(seedProducts());
+public class AutomationPlanServiceImpl implements AutomationPlanService {
+    private final NicheAnalysisService nicheAnalysisService;
+    private final ProductMatchingService productMatchingService;
 
-    public AutomationPlan create(String projectName, ProjectInput input) {
+    public AutomationPlanServiceImpl(
+            NicheAnalysisService nicheAnalysisService,
+            ProductMatchingService productMatchingService
+    ) {
+        this.nicheAnalysisService = nicheAnalysisService;
+        this.productMatchingService = productMatchingService;
+    }
+
+    @Override
+    public AutomationPlan create(PlanRequest request) {
+        ProjectInput input = new ProjectInput(
+                request.niche(),
+                request.audience(),
+                request.stage(),
+                request.dailyMinutes() == null ? 30 : request.dailyMinutes(),
+                request.budget() == null ? 0 : request.budget(),
+                request.goal(),
+                request.pain()
+        );
         NicheAnalysis analysis = nicheAnalysisService.analyze(input);
         List<MatchedProduct> products = productMatchingService.match(input);
         Product primaryProduct = products.getFirst().product();
 
         return new AutomationPlan(
                 new AutomationPlan.ProjectSummary(
-                        blankToDefault(projectName, blankToDefault(input.niche(), "小红书虚拟电商") + "自动化项目"),
+                        blankToDefault(request.projectName(), blankToDefault(input.niche(), "小红书虚拟电商") + "自动化项目"),
                         blankToDefault(input.stage(), "新手起盘"),
                         Instant.now()
                 ),
@@ -104,16 +127,6 @@ public class AutomationPlanService {
                 "小红书封面图，主题“" + niche + "起盘路线”，干净白底，红色重点标注，包含流程箭头和清单感，适合知识类账号",
                 "小红书信息图，展示“赛道-选品-发帖-店铺-私域”五步成交链路，现代工作台风格，高级但清晰",
                 "产品展示图，" + product.name() + "资料包界面 mockup，表格、文档、SOP 叠放，强调可执行和自动交付"
-        );
-    }
-
-    private static List<Product> seedProducts() {
-        return List.of(
-                new Product("p001", "副业起盘资料包", "副业", List.of("新手", "上班族", "宝妈"), "资料包", "19-99", "网盘自动交付", "低", "避免收益承诺，强调方法和流程", List.of("低成本起步", "7 天任务表", "适合零经验")),
-                new Product("p002", "小红书起号 SOP 模板", "小红书运营", List.of("新手", "已有账号"), "模板", "39-199", "文档 + 表格交付", "中", "避免平台规则绝对化表达", List.of("账号定位", "内容节奏", "复盘指标")),
-                new Product("p003", "虚拟产品选品库", "虚拟电商", List.of("新手", "已有店铺"), "产品库", "49-299", "表格 + 更新包", "中", "标注版权和合规检查项", List.of("蓝海方向", "定价参考", "交付难度")),
-                new Product("p004", "私域成交话术包", "私域转化", List.of("已有账号", "已有店铺"), "话术包", "99-499", "文档 + 案例库", "中", "避免夸大转化率", List.of("欢迎话术", "跟进节奏", "复购触发")),
-                new Product("p005", "AI 内容批量生产工作流", "AI 提效", List.of("新手", "已有账号", "团队"), "工作流", "199-980", "提示词 + SOP + 表格", "高", "人工二次校对，降低同质化", List.of("批量选题", "标题模板", "内容复盘"))
         );
     }
 

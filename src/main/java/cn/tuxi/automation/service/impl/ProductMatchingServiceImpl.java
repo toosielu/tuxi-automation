@@ -1,17 +1,26 @@
-package cn.tuxi.automation.domain;
+package cn.tuxi.automation.service.impl;
+
+import cn.tuxi.automation.domain.MatchedProduct;
+import cn.tuxi.automation.domain.Product;
+import cn.tuxi.automation.domain.ProjectInput;
+import cn.tuxi.automation.mapper.ProductMapper;
+import cn.tuxi.automation.service.ProductMatchingService;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class ProductMatchingService {
-    private final List<Product> products;
+@Service
+public class ProductMatchingServiceImpl implements ProductMatchingService {
+    private final ProductMapper productMapper;
 
-    public ProductMatchingService(List<Product> products) {
-        this.products = List.copyOf(products);
+    public ProductMatchingServiceImpl(ProductMapper productMapper) {
+        this.productMapper = productMapper;
     }
 
+    @Override
     public List<MatchedProduct> match(ProjectInput input) {
-        return products.stream()
+        return productMapper.findAll().stream()
                 .map(product -> new MatchedProduct(product, score(product, input), reason(product, input)))
                 .sorted(Comparator.comparingInt(MatchedProduct::matchScore).reversed())
                 .limit(3)
@@ -26,7 +35,7 @@ public class ProductMatchingService {
         String category = normalize(product.category());
 
         boolean audienceMatches = product.audience().stream()
-                .map(ProductMatchingService::normalize)
+                .map(ProductMatchingServiceImpl::normalize)
                 .anyMatch(item -> stage.contains(item) || item.contains(stage) || normalize(input.audience()).contains(item));
         if (audienceMatches) {
             score += 18;
