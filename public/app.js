@@ -30,13 +30,13 @@ form.addEventListener("submit", async event => {
   try {
     const response = await fetch("/api/plan", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify(payload)
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "生成失败");
-    currentPlan = data;
-    renderPlan(data);
+    currentPlan = normalizePlan(data);
+    renderPlan(currentPlan);
   } catch (error) {
     alert(error.message);
   } finally {
@@ -162,7 +162,7 @@ async function saveSchedule(index) {
   const post = currentPlan.posts[index];
   const response = await fetch("/api/schedule", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify({
       title: post.title,
       coverText: post.coverText,
