@@ -2,7 +2,7 @@ const form = document.querySelector("#projectForm");
 const demoButton = document.querySelector("#demoButton");
 const emptyState = document.querySelector("#emptyState");
 const summaryCards = document.querySelector("#summaryCards");
-const sections = ["niche", "products", "posts", "schedule"].map(id => document.querySelector(`#${id}`));
+const sections = ["niche", "traffic", "products", "posts", "schedule"].map(id => document.querySelector(`#${id}`));
 
 let currentPlan = null;
 
@@ -47,7 +47,7 @@ form.addEventListener("submit", async event => {
 function setLoading(isLoading) {
   const button = form.querySelector(".primary-button");
   button.disabled = isLoading;
-  button.textContent = isLoading ? "系统生成中..." : "生成成交作战方案";
+  button.textContent = isLoading ? "系统生成中..." : "生成爆款成交方案";
 }
 
 function renderPlan(plan) {
@@ -58,14 +58,33 @@ function renderPlan(plan) {
 
   summaryCards.innerHTML = `
     <div class="summary-card"><strong>${plan.nicheScore.total}</strong><span>赛道综合分</span></div>
+    <div class="summary-card"><strong>${plan.viralTopics.length}</strong><span>爆款选题</span></div>
     <div class="summary-card"><strong>${plan.products.length}</strong><span>匹配产品</span></div>
     <div class="summary-card"><strong>${plan.posts.length}</strong><span>生成帖子</span></div>
   `;
 
   renderNiche(plan.nicheScore);
+  renderTraffic(plan.viralTopics);
   renderProducts(plan.products);
   renderPosts(plan.posts, plan.imagePrompts);
   renderSchedule(plan);
+}
+
+function renderTraffic(topics) {
+  document.querySelector("#trafficResult").innerHTML = topics.map(topic => `
+    <article class="topic-card">
+      <div class="topic-score">${topic.trafficScore}</div>
+      <div class="tag-row">
+        <span class="tag">${topic.type}</span>
+        <span class="tag">流量优先</span>
+      </div>
+      <h3>${topic.title}</h3>
+      <p><b>封面：</b>${topic.coverText}</p>
+      <p><b>开头：</b>${topic.hook}</p>
+      <p><b>爆款判断：</b>${topic.reason}</p>
+      <p><b>变现承接：</b>${topic.monetizationPath}</p>
+    </article>
+  `).join("");
 }
 
 function renderNiche(score) {

@@ -4,6 +4,7 @@
     return {
       ...safePlan,
       nicheScore: normalizeScore(safePlan.nicheScore),
+      viralTopics: normalizeViralTopics(safePlan.viralTopics),
       products: normalizeProducts(safePlan.products),
       posts: Array.isArray(safePlan.posts) ? safePlan.posts : [],
       imagePrompts: Array.isArray(safePlan.imagePrompts) ? safePlan.imagePrompts : [],
@@ -11,6 +12,19 @@
       privateDomainSop: Array.isArray(safePlan.privateDomainSop) ? safePlan.privateDomainSop : [],
       nextActions: Array.isArray(safePlan.nextActions) ? safePlan.nextActions : []
     };
+  }
+
+  function normalizeViralTopics(topics) {
+    if (!Array.isArray(topics)) return [];
+    return topics.map(topic => ({
+      type: topic.type || "选题",
+      title: topic.title || "",
+      coverText: topic.coverText || "",
+      hook: topic.hook || "",
+      trafficScore: value(topic.trafficScore, topic.score, 0),
+      reason: topic.reason || "",
+      monetizationPath: topic.monetizationPath || ""
+    }));
   }
 
   function normalizeScore(score) {

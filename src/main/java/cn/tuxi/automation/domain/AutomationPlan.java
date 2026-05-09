@@ -6,6 +6,7 @@ import java.util.List;
 public record AutomationPlan(
         ProjectSummary project,
         NicheAnalysis nicheScore,
+        List<ViralTopic> viralTopics,
         List<MatchedProduct> products,
         List<PostDraft> posts,
         List<String> imagePrompts,

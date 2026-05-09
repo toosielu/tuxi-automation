@@ -254,7 +254,7 @@ textarea:focus {
 
 .pipeline {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   margin-bottom: 18px;
 }
@@ -289,13 +289,14 @@ textarea:focus {
 
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
 .summary-card,
 .metric-card,
 .product-card,
+.topic-card,
 .post-card,
 .prompt-item,
 .store-card,
@@ -366,6 +367,7 @@ textarea:focus {
   font-weight: 900;
 }
 
+.topic-grid,
 .product-grid,
 .post-grid {
   display: grid;
@@ -373,9 +375,30 @@ textarea:focus {
   gap: 14px;
 }
 
+.topic-card,
 .product-card,
 .post-card {
+  position: relative;
   padding: 16px;
+}
+
+.topic-card {
+  overflow: hidden;
+  background: #fffdf8;
+}
+
+.topic-score {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #17211c;
+  color: #fff;
+  font-weight: 900;
 }
 
 .tag-row {
@@ -394,6 +417,7 @@ textarea:focus {
   font-weight: 700;
 }
 
+.topic-card p,
 .post-card p,
 .product-card p,
 .store-card p,
@@ -449,6 +473,7 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
+  .topic-grid,
   .product-grid,
   .post-grid,
   .summary-cards,
@@ -469,6 +494,7 @@ textarea:focus {
   }
 
   .pipeline,
+  .topic-grid,
   .product-grid,
   .post-grid,
   .summary-cards,

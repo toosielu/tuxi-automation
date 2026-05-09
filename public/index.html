@@ -13,19 +13,20 @@
           <div class="brand-mark">图</div>
           <div>
             <strong>图喜系统</strong>
-            <span>小红书虚拟自动化成交</span>
+            <span>小红书爆款成交工作台</span>
           </div>
         </div>
         <nav class="nav-list">
           <a class="active" href="#project">项目配置</a>
-          <a href="#niche">赛道分析</a>
+          <a href="#niche">赛道评分</a>
+          <a href="#traffic">爆款流量</a>
           <a href="#products">产品匹配</a>
           <a href="#posts">AI 出帖</a>
           <a href="#schedule">发布排程</a>
         </nav>
         <div class="sidebar-note">
           <span>V1 MVP</span>
-          <p>先跑通筛赛道、匹配产品、生成帖子、排程发布四步闭环。</p>
+          <p>先把爆款选题、帖子生成、店铺承接和手动复盘跑通。</p>
         </div>
       </aside>
 
@@ -33,7 +34,7 @@
         <header class="topbar">
           <div>
             <p class="eyebrow">Automation Workspace</p>
-            <h1>小红书虚拟自动化成交系统</h1>
+            <h1>小红书虚拟电商爆款成交系统</h1>
           </div>
           <button id="demoButton" class="ghost-button" type="button">填入演示数据</button>
         </header>
@@ -96,7 +97,7 @@
               <textarea name="pain" rows="4" placeholder="例如：不知道选什么产品，帖子发了没人咨询"></textarea>
             </label>
 
-            <button class="primary-button" type="submit">生成成交作战方案</button>
+            <button class="primary-button" type="submit">生成爆款成交方案</button>
           </form>
 
           <section class="panel status-panel">
@@ -106,12 +107,13 @@
             </div>
             <div class="pipeline">
               <div class="pipeline-step done">筛赛道</div>
-              <div class="pipeline-step">接产品库</div>
+              <div class="pipeline-step">爆款选题</div>
+              <div class="pipeline-step">产品承接</div>
               <div class="pipeline-step">AI 出帖</div>
               <div class="pipeline-step">发帖排程</div>
             </div>
             <div id="emptyState" class="empty-state">
-              填写左侧项目后，系统会生成赛道评分、产品匹配、帖子内容和发布计划。
+              填写左侧项目后，系统会生成爆款选题、产品承接、帖子内容和发布计划。
             </div>
             <div id="summaryCards" class="summary-cards hidden"></div>
           </section>
@@ -120,14 +122,22 @@
         <section id="niche" class="panel result-panel hidden">
           <div class="panel-head">
             <p class="eyebrow">Step 02</p>
-            <h2>自动筛选赛道</h2>
+            <h2>AI 诊断与赛道评分</h2>
           </div>
           <div id="nicheResult" class="niche-result"></div>
         </section>
 
-        <section id="products" class="panel result-panel hidden">
+        <section id="traffic" class="panel result-panel hidden">
           <div class="panel-head">
             <p class="eyebrow">Step 03</p>
+            <h2>爆款流量方案</h2>
+          </div>
+          <div id="trafficResult" class="topic-grid"></div>
+        </section>
+
+        <section id="products" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">Step 04</p>
             <h2>自动对接产品库</h2>
           </div>
           <div id="productResult" class="product-grid"></div>
@@ -135,7 +145,7 @@
 
         <section id="posts" class="panel result-panel hidden">
           <div class="panel-head">
-            <p class="eyebrow">Step 04</p>
+            <p class="eyebrow">Step 05</p>
             <h2>AI 生成爆款小红书帖子</h2>
           </div>
           <div id="postResult" class="post-grid"></div>
@@ -147,7 +157,7 @@
 
         <section id="schedule" class="panel result-panel hidden">
           <div class="panel-head">
-            <p class="eyebrow">Step 05</p>
+            <p class="eyebrow">Step 06</p>
             <h2>发布排程与转化承接</h2>
           </div>
           <div id="storeCopy" class="store-copy"></div>
