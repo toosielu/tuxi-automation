@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>图喜｜小红书虚拟自动化成交系统</title>
+    <title>图喜 AI 小红书爆款内容生成系统</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
@@ -12,167 +12,146 @@
         <div class="brand">
           <div class="brand-mark">图</div>
           <div>
-            <strong>图喜系统</strong>
-            <span>小红书爆款成交工作台</span>
+            <strong>图喜 AI</strong>
+            <span>小红书爆款内容生成</span>
           </div>
         </div>
         <nav class="nav-list">
-          <a class="active" href="#project">项目配置</a>
-          <a href="#niche">赛道评分</a>
-          <a href="#traffic">爆款流量</a>
-          <a href="#products">产品匹配</a>
-          <a href="#posts">AI 出帖</a>
-          <a href="#schedule">发布排程</a>
+          <a class="active" href="#generator">内容生成</a>
+          <a href="#covers">爆款封面</a>
+          <a href="#posts">小红书文案</a>
+          <a href="#product">商品承接</a>
+          <a href="#dm">私信话术</a>
+          <a href="#history">历史记录</a>
         </nav>
         <div class="sidebar-note">
-          <span>V1 MVP</span>
-          <p>先把爆款选题、帖子生成、店铺承接和手动复盘跑通。</p>
+          <span>V1 Focus</span>
+          <p>只做爆款封面方案、图文文案、商品承接和私信话术，先让用户能复制发布。</p>
         </div>
       </aside>
 
       <main class="main">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Automation Workspace</p>
-            <h1>小红书虚拟电商爆款成交系统</h1>
+            <p class="eyebrow">AI Content Generator</p>
+            <h1>图喜 AI 小红书爆款内容生成系统</h1>
           </div>
           <button id="demoButton" class="ghost-button" type="button">填入演示数据</button>
         </header>
 
-        <section id="project" class="workspace-grid">
-          <form id="projectForm" class="panel control-panel">
+        <section id="generator" class="workspace-grid">
+          <form id="generateForm" class="panel control-panel">
             <div class="panel-head">
-              <p class="eyebrow">Step 01</p>
-              <h2>创建自动化项目</h2>
+              <p class="eyebrow">Input</p>
+              <h2>输入产品信息</h2>
             </div>
 
             <label>
-              项目名称
-              <input name="projectName" placeholder="例如：宝妈副业资料号">
+              目标赛道
+              <input name="niche" required placeholder="例如：AI 提效、商业副业、教辅、母婴育儿">
             </label>
 
             <label>
-              目标赛道
-              <input name="niche" required placeholder="例如：副业、小红书运营、AI 提效">
+              产品名称
+              <input name="productName" required placeholder="例如：小红书虚拟电商实操资料包">
             </label>
 
             <label>
               目标人群
-              <input name="audience" placeholder="例如：想做副业的新手、已有账号但不出单的人">
+              <input name="targetUser" required placeholder="例如：想做副业的新手">
+            </label>
+
+            <label>
+              产品卖点
+              <textarea name="sellingPoints" required rows="3" placeholder="例如：低成本、可复制、适合新手、自动发货"></textarea>
             </label>
 
             <div class="field-row">
               <label>
-                当前阶段
-                <select name="stage">
-                  <option>新手起盘</option>
-                  <option>已有账号</option>
-                  <option>已有店铺</option>
+                内容目的
+                <select name="goal" required>
+                  <option>引流涨粉</option>
+                  <option>私信咨询</option>
+                  <option>店铺点击</option>
+                  <option selected>产品成交</option>
+                  <option>信任建立</option>
                 </select>
               </label>
               <label>
-                每日分钟
-                <input name="dailyMinutes" type="number" min="10" value="45">
-              </label>
-            </div>
-
-            <div class="field-row">
-              <label>
-                启动预算
-                <input name="budget" type="number" min="0" value="300">
-              </label>
-              <label>
-                转化目标
-                <select name="goal">
-                  <option>店铺出单</option>
-                  <option>私域咨询</option>
-                  <option>资料包成交</option>
-                  <option>AI 批量提效</option>
+                风格选择
+                <select name="style">
+                  <option selected>干货型</option>
+                  <option>结果型</option>
+                  <option>避坑型</option>
+                  <option>反差型</option>
+                  <option>真实记录型</option>
+                  <option>清单型</option>
                 </select>
               </label>
             </div>
 
             <label>
               当前卡点
-              <textarea name="pain" rows="4" placeholder="例如：不知道选什么产品，帖子发了没人咨询"></textarea>
+              <textarea name="painPoint" rows="3" placeholder="例如：不知道发什么内容，也不知道怎么承接成交"></textarea>
             </label>
 
-            <button class="primary-button" type="submit">生成爆款成交方案</button>
+            <button class="primary-button" type="submit">生成爆款内容</button>
           </form>
 
           <section class="panel status-panel">
             <div class="panel-head">
-              <p class="eyebrow">System Output</p>
-              <h2>自动化链路状态</h2>
-            </div>
-            <div class="pipeline">
-              <div class="pipeline-step done">筛赛道</div>
-              <div class="pipeline-step">爆款选题</div>
-              <div class="pipeline-step">产品承接</div>
-              <div class="pipeline-step">AI 出帖</div>
-              <div class="pipeline-step">发帖排程</div>
+              <p class="eyebrow">Output</p>
+              <h2>本次生成内容</h2>
             </div>
             <div id="emptyState" class="empty-state">
-              填写左侧项目后，系统会生成爆款选题、产品承接、帖子内容和发布计划。
+              填写左侧信息后，系统会生成 3 个封面方案、3 条小红书文案、商品承接文案和 5 条私信话术。
             </div>
             <div id="summaryCards" class="summary-cards hidden"></div>
           </section>
         </section>
 
-        <section id="niche" class="panel result-panel hidden">
+        <section id="covers" class="panel result-panel hidden">
           <div class="panel-head">
-            <p class="eyebrow">Step 02</p>
-            <h2>AI 诊断与赛道评分</h2>
+            <p class="eyebrow">Covers</p>
+            <h2>AI 爆款封面方案</h2>
           </div>
-          <div id="nicheResult" class="niche-result"></div>
-        </section>
-
-        <section id="traffic" class="panel result-panel hidden">
-          <div class="panel-head">
-            <p class="eyebrow">Step 03</p>
-            <h2>爆款流量方案</h2>
-          </div>
-          <div id="trafficResult" class="topic-grid"></div>
-        </section>
-
-        <section id="products" class="panel result-panel hidden">
-          <div class="panel-head">
-            <p class="eyebrow">Step 04</p>
-            <h2>自动对接产品库</h2>
-          </div>
-          <div id="productResult" class="product-grid"></div>
+          <div id="coverResult" class="card-grid"></div>
         </section>
 
         <section id="posts" class="panel result-panel hidden">
           <div class="panel-head">
-            <p class="eyebrow">Step 05</p>
-            <h2>AI 生成爆款小红书帖子</h2>
+            <p class="eyebrow">Posts</p>
+            <h2>AI 小红书文案</h2>
           </div>
-          <div id="postResult" class="post-grid"></div>
-          <div class="image-prompt-box">
-            <h3>图片生成提示词</h3>
-            <div id="imagePrompts"></div>
-          </div>
+          <div id="postResult" class="card-grid"></div>
         </section>
 
-        <section id="schedule" class="panel result-panel hidden">
+        <section id="product" class="panel result-panel hidden">
           <div class="panel-head">
-            <p class="eyebrow">Step 06</p>
-            <h2>发布排程与转化承接</h2>
+            <p class="eyebrow">Product Copy</p>
+            <h2>商品承接文案</h2>
           </div>
-          <div id="storeCopy" class="store-copy"></div>
-          <div id="scheduleResult" class="schedule-list"></div>
+          <div id="productCopyResult"></div>
+        </section>
+
+        <section id="dm" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">DM Scripts</p>
+            <h2>私信引导话术</h2>
+          </div>
+          <div id="dmResult" class="script-list"></div>
+        </section>
+
+        <section id="history" class="panel result-panel">
+          <div class="panel-head">
+            <p class="eyebrow">History</p>
+            <h2>历史记录</h2>
+          </div>
+          <div id="historyResult" class="script-list"></div>
         </section>
       </main>
     </div>
 
-    <template id="scoreTemplate">
-      <div class="score-ring">
-        <span></span>
-      </div>
-    </template>
-
-    <script src="/plan-normalizer.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>

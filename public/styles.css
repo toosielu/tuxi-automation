@@ -367,6 +367,7 @@ textarea:focus {
   font-weight: 900;
 }
 
+.card-grid,
 .topic-grid,
 .product-grid,
 .post-grid {
@@ -375,6 +376,7 @@ textarea:focus {
   gap: 14px;
 }
 
+.content-card,
 .topic-card,
 .product-card,
 .post-card {
@@ -385,6 +387,39 @@ textarea:focus {
 .topic-card {
   overflow: hidden;
   background: #fffdf8;
+}
+
+.content-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 16px;
+}
+
+.content-card p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.script-list {
+  display: grid;
+  gap: 10px;
+}
+
+.script-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  padding: 14px;
+}
+
+.script-item p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.empty-state.small {
+  min-height: 120px;
 }
 
 .topic-score {
@@ -473,6 +508,7 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
+  .card-grid,
   .topic-grid,
   .product-grid,
   .post-grid,
@@ -494,6 +530,7 @@ textarea:focus {
   }
 
   .pipeline,
+  .card-grid,
   .topic-grid,
   .product-grid,
   .post-grid,
