@@ -1,5 +1,8 @@
-package cn.tuxi.automation.domain;
+package cn.tuxi.automation.test.domain;
 
+import cn.tuxi.automation.domain.MatchedProduct;
+import cn.tuxi.automation.domain.Product;
+import cn.tuxi.automation.domain.ProjectInput;
 import cn.tuxi.automation.mapper.ProductMapper;
 import cn.tuxi.automation.service.impl.ProductMatchingServiceImpl;
 import org.junit.jupiter.api.Test;

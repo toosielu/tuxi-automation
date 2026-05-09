@@ -1,5 +1,7 @@
-package cn.tuxi.automation.domain;
+package cn.tuxi.automation.test.domain;
 
+import cn.tuxi.automation.domain.NicheAnalysis;
+import cn.tuxi.automation.domain.ProjectInput;
 import cn.tuxi.automation.service.impl.NicheAnalysisServiceImpl;
 import org.junit.jupiter.api.Test;
 
