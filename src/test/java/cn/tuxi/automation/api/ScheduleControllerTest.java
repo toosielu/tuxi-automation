@@ -1,0 +1,46 @@
+package cn.tuxi.automation.api;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class ScheduleControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void savesPostScheduleAndReturnsScheduleList() throws Exception {
+        String body = """
+                {
+                  "title": "新手做副业，最容易卡住的 5 个地方",
+                  "coverText": "别再盲目发帖了",
+                  "cta": "想要起盘清单，可以评论路线。",
+                  "scheduledAt": "2026-05-10T09:00:00.000Z"
+                }
+                """;
+
+        mockMvc.perform(post("/api/schedule")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.schedule.status").value("待发布"))
+                .andExpect(jsonPath("$.schedule.title").value("新手做副业，最容易卡住的 5 个地方"))
+                .andExpect(jsonPath("$.schedules", hasSize(1)));
+
+        mockMvc.perform(get("/api/schedule"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.schedules", hasSize(1)));
+    }
+}
