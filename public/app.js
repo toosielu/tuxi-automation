@@ -135,10 +135,12 @@ function renderPosts(posts, prompts) {
     <article class="post-card">
       <div class="tag-row">
         <span class="tag">笔记 ${index + 1}</span>
+        <span class="tag">${post.contentType || "图文贴"}</span>
         <span class="tag">${post.angle}</span>
       </div>
       <h3>${post.title}</h3>
       <p><b>封面：</b>${post.coverText}</p>
+      ${post.imageBrief ? `<p><b>画面：</b>${post.imageBrief}</p>` : ""}
       <p>${post.body}</p>
       <p><b>CTA：</b>${post.cta}</p>
       <button class="small-button" type="button" onclick="saveSchedule(${index})">加入发布排程</button>

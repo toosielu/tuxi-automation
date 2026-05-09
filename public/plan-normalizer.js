@@ -6,7 +6,7 @@
       nicheScore: normalizeScore(safePlan.nicheScore),
       viralTopics: normalizeViralTopics(safePlan.viralTopics),
       products: normalizeProducts(safePlan.products),
-      posts: Array.isArray(safePlan.posts) ? safePlan.posts : [],
+      posts: normalizePosts(safePlan.posts),
       imagePrompts: Array.isArray(safePlan.imagePrompts) ? safePlan.imagePrompts : [],
       storeCopy: normalizeStoreCopy(safePlan.storeCopy),
       privateDomainSop: Array.isArray(safePlan.privateDomainSop) ? safePlan.privateDomainSop : [],
@@ -24,6 +24,19 @@
       trafficScore: value(topic.trafficScore, topic.score, 0),
       reason: topic.reason || "",
       monetizationPath: topic.monetizationPath || ""
+    }));
+  }
+
+  function normalizePosts(posts) {
+    if (!Array.isArray(posts)) return [];
+    return posts.map(post => ({
+      contentType: post.contentType || "图文贴",
+      angle: post.angle || "",
+      title: post.title || "",
+      coverText: post.coverText || "",
+      imageBrief: post.imageBrief || "",
+      body: post.body || "",
+      cta: post.cta || ""
     }));
   }
 

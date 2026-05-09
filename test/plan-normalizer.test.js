@@ -40,7 +40,17 @@ test("normalizes Java plan response for the frontend renderer", () => {
         reason: "适合当前目标人群"
       }
     ],
-    posts: [],
+    posts: [
+      {
+        contentType: "引流爆款",
+        angle: "痛点反差",
+        title: "别急着发",
+        coverText: "先看这里",
+        imageBrief: "手机备忘录截图感",
+        body: "像真人复盘",
+        cta: "评论"
+      }
+    ],
     imagePrompts: [],
     storeCopy: {
       title: "副业起盘资料包",
@@ -57,6 +67,8 @@ test("normalizes Java plan response for the frontend renderer", () => {
   assert.equal(normalized.nicheScore.demand, 84);
   assert.equal(normalized.viralTopics[0].trafficScore, 92);
   assert.equal(normalized.viralTopics[0].type, "痛点清单");
+  assert.equal(normalized.posts[0].contentType, "引流爆款");
+  assert.equal(normalized.posts[0].imageBrief, "手机备忘录截图感");
   assert.equal(normalized.products[0].name, "副业起盘资料包");
   assert.equal(normalized.products[0].matchScore, 84);
   assert.deepEqual(normalized.products[0].sellingPoints, ["低成本起步"]);
