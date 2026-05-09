@@ -1,0 +1,13 @@
+{
+  "name": "tuxi-xiaohongshu-automation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "小红书虚拟电商自动化成交系统 MVP",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

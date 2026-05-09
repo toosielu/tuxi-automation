@@ -1,0 +1,7 @@
+node_modules/
+.env
+.idea/
+.superpowers/
+logs/
+.m2/
+target/

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图喜｜小红书虚拟自动化成交系统</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">图</div>
+          <div>
+            <strong>图喜系统</strong>
+            <span>小红书虚拟自动化成交</span>
+          </div>
+        </div>
+        <nav class="nav-list">
+          <a class="active" href="#project">项目配置</a>
+          <a href="#niche">赛道分析</a>
+          <a href="#products">产品匹配</a>
+          <a href="#posts">AI 出帖</a>
+          <a href="#schedule">发布排程</a>
+        </nav>
+        <div class="sidebar-note">
+          <span>V1 MVP</span>
+          <p>先跑通筛赛道、匹配产品、生成帖子、排程发布四步闭环。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Automation Workspace</p>
+            <h1>小红书虚拟自动化成交系统</h1>
+          </div>
+          <button id="demoButton" class="ghost-button" type="button">填入演示数据</button>
+        </header>
+
+        <section id="project" class="workspace-grid">
+          <form id="projectForm" class="panel control-panel">
+            <div class="panel-head">
+              <p class="eyebrow">Step 01</p>
+              <h2>创建自动化项目</h2>
+            </div>
+
+            <label>
+              项目名称
+              <input name="projectName" placeholder="例如：宝妈副业资料号">
+            </label>
+
+            <label>
+              目标赛道
+              <input name="niche" required placeholder="例如：副业、小红书运营、AI 提效">
+            </label>
+
+            <label>
+              目标人群
+              <input name="audience" placeholder="例如：想做副业的新手、已有账号但不出单的人">
+            </label>
+
+            <div class="field-row">
+              <label>
+                当前阶段
+                <select name="stage">
+                  <option>新手起盘</option>
+                  <option>已有账号</option>
+                  <option>已有店铺</option>
+                </select>
+              </label>
+              <label>
+                每日分钟
+                <input name="dailyMinutes" type="number" min="10" value="45">
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label>
+                启动预算
+                <input name="budget" type="number" min="0" value="300">
+              </label>
+              <label>
+                转化目标
+                <select name="goal">
+                  <option>店铺出单</option>
+                  <option>私域咨询</option>
+                  <option>资料包成交</option>
+                  <option>AI 批量提效</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              当前卡点
+              <textarea name="pain" rows="4" placeholder="例如：不知道选什么产品，帖子发了没人咨询"></textarea>
+            </label>
+
+            <button class="primary-button" type="submit">生成成交作战方案</button>
+          </form>
+
+          <section class="panel status-panel">
+            <div class="panel-head">
+              <p class="eyebrow">System Output</p>
+              <h2>自动化链路状态</h2>
+            </div>
+            <div class="pipeline">
+              <div class="pipeline-step done">筛赛道</div>
+              <div class="pipeline-step">接产品库</div>
+              <div class="pipeline-step">AI 出帖</div>
+              <div class="pipeline-step">发帖排程</div>
+            </div>
+            <div id="emptyState" class="empty-state">
+              填写左侧项目后，系统会生成赛道评分、产品匹配、帖子内容和发布计划。
+            </div>
+            <div id="summaryCards" class="summary-cards hidden"></div>
+          </section>
+        </section>
+
+        <section id="niche" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">Step 02</p>
+            <h2>自动筛选赛道</h2>
+          </div>
+          <div id="nicheResult" class="niche-result"></div>
+        </section>
+
+        <section id="products" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">Step 03</p>
+            <h2>自动对接产品库</h2>
+          </div>
+          <div id="productResult" class="product-grid"></div>
+        </section>
+
+        <section id="posts" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">Step 04</p>
+            <h2>AI 生成爆款小红书帖子</h2>
+          </div>
+          <div id="postResult" class="post-grid"></div>
+          <div class="image-prompt-box">
+            <h3>图片生成提示词</h3>
+            <div id="imagePrompts"></div>
+          </div>
+        </section>
+
+        <section id="schedule" class="panel result-panel hidden">
+          <div class="panel-head">
+            <p class="eyebrow">Step 05</p>
+            <h2>发布排程与转化承接</h2>
+          </div>
+          <div id="storeCopy" class="store-copy"></div>
+          <div id="scheduleResult" class="schedule-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="scoreTemplate">
+      <div class="score-ring">
+        <span></span>
+      </div>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

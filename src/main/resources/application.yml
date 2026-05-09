@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: tuxi-automation
+  web:
+    resources:
+      static-locations: file:./public/
+
+tuxi:
+  persistence:
+    provider: supabase
+    enabled: false

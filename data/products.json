@@ -1,0 +1,62 @@
+[
+  {
+    "id": "p001",
+    "name": "副业起盘资料包",
+    "category": "副业",
+    "audience": ["新手", "上班族", "宝妈"],
+    "type": "资料包",
+    "priceRange": "19-99",
+    "delivery": "网盘自动交付",
+    "difficulty": "低",
+    "risk": "避免收益承诺，强调方法和流程",
+    "sellingPoints": ["低成本起步", "7 天任务表", "适合零经验"]
+  },
+  {
+    "id": "p002",
+    "name": "小红书起号 SOP 模板",
+    "category": "小红书运营",
+    "audience": ["新手", "已有账号"],
+    "type": "模板",
+    "priceRange": "39-199",
+    "delivery": "文档 + 表格交付",
+    "difficulty": "中",
+    "risk": "避免平台规则绝对化表达",
+    "sellingPoints": ["账号定位", "内容节奏", "复盘指标"]
+  },
+  {
+    "id": "p003",
+    "name": "虚拟产品选品库",
+    "category": "虚拟电商",
+    "audience": ["新手", "已有店铺"],
+    "type": "产品库",
+    "priceRange": "49-299",
+    "delivery": "表格 + 更新包",
+    "difficulty": "中",
+    "risk": "标注版权和合规检查项",
+    "sellingPoints": ["蓝海方向", "定价参考", "交付难度"]
+  },
+  {
+    "id": "p004",
+    "name": "私域成交话术包",
+    "category": "私域转化",
+    "audience": ["已有账号", "已有店铺"],
+    "type": "话术包",
+    "priceRange": "99-499",
+    "delivery": "文档 + 案例库",
+    "difficulty": "中",
+    "risk": "避免夸大转化率",
+    "sellingPoints": ["欢迎话术", "跟进节奏", "复购触发"]
+  },
+  {
+    "id": "p005",
+    "name": "AI 内容批量生产工作流",
+    "category": "AI 提效",
+    "audience": ["新手", "已有账号", "团队"],
+    "type": "工作流",
+    "priceRange": "199-980",
+    "delivery": "提示词 + SOP + 表格",
+    "difficulty": "高",
+    "risk": "人工二次校对，降低同质化",
+    "sellingPoints": ["批量选题", "标题模板", "内容复盘"]
+  }
+]
