@@ -17,6 +17,9 @@ const summaryCards = document.querySelector("#summaryCards");
 const loadingState = document.querySelector("#loadingState");
 const resultSections = ["covers", "posts", "product", "dm"].map(id => document.querySelector(`#${id}`));
 const sourceType = document.querySelector("#sourceType");
+const imageFile = document.querySelector("#imageFile");
+const imagePreview = document.querySelector("#imagePreview");
+const toast = document.querySelector("#toast");
 
 document.querySelectorAll(".mode-tab").forEach(button => {
   button.addEventListener("click", () => switchMode(button.dataset.mode));
@@ -38,6 +41,17 @@ demoButton.addEventListener("click", () => {
     const field = form.elements[key];
     if (field) field.value = value;
   });
+});
+
+imageFile?.addEventListener("change", () => {
+  const file = imageFile.files?.[0];
+  if (!file) {
+    imagePreview.classList.add("hidden");
+    imagePreview.querySelector("img").removeAttribute("src");
+    return;
+  }
+  imagePreview.querySelector("img").src = URL.createObjectURL(file);
+  imagePreview.classList.remove("hidden");
 });
 
 form.addEventListener("submit", async event => {
@@ -138,6 +152,7 @@ function renderCovers(covers) {
         <p class="text-sm font-semibold leading-6 text-muted"><b class="text-ink">点击逻辑：</b>${cover.reason}</p>
         <div class="flex gap-2 pt-1">
           <button class="copy-button" type="button" onclick="copyText(${JSON.stringify(toCoverText(cover))})">复制</button>
+          <button class="download-button" type="button" onclick="downloadCover('${encodeURIComponent(JSON.stringify(cover))}', ${index + 1})">下载封面图</button>
           <button class="regen-button" type="button" onclick="regenerate()">重新生成</button>
         </div>
       </div>
@@ -217,6 +232,96 @@ async function loadHistory() {
 
 async function copyText(text) {
   await navigator.clipboard.writeText(text);
+  showToast("已复制到剪贴板");
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  safeAnimate("#toast", { opacity: [0, 1], y: [12, 0] }, { duration: 0.18 });
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 1600);
+}
+
+function downloadCover(encodedCover, index) {
+  const cover = JSON.parse(decodeURIComponent(encodedCover));
+  const canvas = document.createElement("canvas");
+  const size = 1200;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const gradient = ctx.createLinearGradient(0, 0, size, size);
+  gradient.addColorStop(0, "#fffdf8");
+  gradient.addColorStop(0.62, "#fff3e2");
+  gradient.addColorStop(1, "#ffe8ec");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+
+  ctx.fillStyle = "rgba(255, 36, 66, 0.1)";
+  ctx.beginPath();
+  ctx.arc(210, 190, 150, 0, Math.PI * 2);
+  ctx.fill();
+
+  drawRoundRect(ctx, 86, 90, 420, 74, 37, "rgba(255,36,66,0.12)");
+  ctx.fillStyle = "#ff2442";
+  ctx.font = "900 34px Microsoft YaHei, PingFang SC, Arial";
+  ctx.fillText(cover.coverSubtitle || "小红书爆款封面", 120, 139);
+
+  ctx.fillStyle = "#171717";
+  ctx.font = "900 112px Microsoft YaHei, PingFang SC, Arial";
+  wrapCanvasText(ctx, cover.coverTitle || "爆款封面", 92, 350, 1010, 132, 4);
+
+  drawRoundRect(ctx, 92, 842, 1016, 210, 42, "rgba(23,23,23,0.06)");
+  ctx.fillStyle = "#171717";
+  ctx.font = "900 34px Microsoft YaHei, PingFang SC, Arial";
+  ctx.fillText("视觉风格", 136, 908);
+  ctx.fillStyle = "#5f5a52";
+  ctx.font = "700 32px Microsoft YaHei, PingFang SC, Arial";
+  wrapCanvasText(ctx, cover.visualStyle || cover.layoutSuggestion || "干净、有重点、适合收藏", 136, 970, 930, 44, 2);
+
+  const link = document.createElement("a");
+  link.download = `tuxi-cover-${index}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+  showToast("封面图已生成");
+}
+
+function drawRoundRect(ctx, x, y, width, height, radius, fillStyle) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  ctx.fillStyle = fillStyle;
+  ctx.fill();
+}
+
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+  const chars = [...String(text)];
+  let line = "";
+  let lines = 0;
+  for (const char of chars) {
+    const testLine = line + char;
+    if (ctx.measureText(testLine).width > maxWidth && line) {
+      ctx.fillText(line, x, y);
+      y += lineHeight;
+      lines += 1;
+      line = char;
+      if (lines >= maxLines - 1) break;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line && lines < maxLines) ctx.fillText(line, x, y);
 }
 
 function regenerate() {
@@ -250,5 +355,6 @@ function toProductText(copy) {
 }
 
 window.copyText = copyText;
+window.downloadCover = downloadCover;
 window.regenerate = regenerate;
 loadHistory();

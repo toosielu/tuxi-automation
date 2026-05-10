@@ -84,6 +84,9 @@
             <div class="mode-panel hidden" data-panel="IMAGE">
               <label class="field-label" for="imageFile">上传参考图</label>
               <input id="imageFile" type="file" accept="image/*" class="studio-input file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-black file:text-white">
+              <div id="imagePreview" class="mt-4 hidden overflow-hidden rounded-[24px] border border-black/5 bg-black/[0.03] p-3">
+                <img alt="参考图预览" class="h-44 w-full rounded-[18px] object-cover">
+              </div>
               <label class="field-label mt-4" for="imageNotes">图片内容描述</label>
               <textarea id="imageNotes" name="imageNotes" rows="5" class="studio-input resize-y" placeholder="描述图片里有什么，想模仿哪种封面感觉，产品截图重点是什么..."></textarea>
             </div>
@@ -228,6 +231,8 @@
         <div id="historyResult" class="grid gap-4 md:grid-cols-3"></div>
       </section>
     </main>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
     <script type="module" src="/app.js"></script>
   </body>
