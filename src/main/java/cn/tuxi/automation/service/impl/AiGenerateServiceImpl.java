@@ -35,9 +35,10 @@ public class AiGenerateServiceImpl implements AiGenerateService {
         String goal = text(request.goal(), "产品成交");
         String style = text(request.style(), "干货型");
         String painPoint = text(request.painPoint(), "不知道发什么内容，也不知道怎么承接成交");
+        String sourceContext = sourceContext(request);
 
         List<CoverPlan> covers = buildCovers(niche, productName, targetUser, style);
-        List<XiaohongshuPost> posts = buildPosts(niche, productName, targetUser, goal, painPoint);
+        List<XiaohongshuPost> posts = buildPosts(niche, productName, targetUser, goal, painPoint, sourceContext);
         ProductCopy productCopy = buildProductCopy(productName, targetUser, sellingPoints);
         List<DmScript> dmScripts = buildDmScripts(productName);
         GenerateResult result = new GenerateResult(id, covers, posts, productCopy, dmScripts, createdAt);
@@ -85,13 +86,13 @@ public class AiGenerateServiceImpl implements AiGenerateService {
         );
     }
 
-    private List<XiaohongshuPost> buildPosts(String niche, String productName, String targetUser, String goal, String painPoint) {
+    private List<XiaohongshuPost> buildPosts(String niche, String productName, String targetUser, String goal, String painPoint, String sourceContext) {
         return List.of(
                 new XiaohongshuPost(
                         "流量爆款贴",
                         targetUserShort(targetUser) + "做" + niche + "，先别急着上产品",
                         "我发现很多人不是不会做，是第一步就做重了。",
-                        "如果你现在卡在“发什么、怎么卖”，先别急着把产品做得很大。先用一条笔记测试一个具体问题：用户会不会收藏、会不会问、会不会点进商品。只要这三个动作里有一个跑出来，再去补资料包和详情页，成功率会稳很多。",
+                        sourceContext + "如果你现在卡在“发什么、怎么卖”，先别急着把产品做得很大。先用一条笔记测试一个具体问题：用户会不会收藏、会不会问、会不会点进商品。只要这三个动作里有一个跑出来，再去补资料包和详情页，成功率会稳很多。",
                         "想要这套测试表，可以评论“测试”。",
                         List.of("#小红书运营", "#虚拟资料", "#副业起盘", "#内容变现"),
                         "用轻量测试切入，降低新手压力，适合带来评论和私信。"
@@ -153,5 +154,19 @@ public class AiGenerateServiceImpl implements AiGenerateService {
 
     private String text(String value, String fallback) {
         return value == null || value.isBlank() ? fallback : value;
+    }
+
+    private String sourceContext(GenerateRequest request) {
+        String sourceType = text(request.sourceType(), "TEXT");
+        if ("LINK".equalsIgnoreCase(sourceType) && request.sourceLink() != null && !request.sourceLink().isBlank()) {
+            return "我看这个链接更适合拆成“问题-方法-承接”的内容，不要照搬原文。";
+        }
+        if ("IMAGE".equalsIgnoreCase(sourceType) && request.imageNotes() != null && !request.imageNotes().isBlank()) {
+            return "这张图可以先抓住一个最明显的信息点来写，别把画面里的信息全塞进正文。";
+        }
+        if (request.sourceText() != null && !request.sourceText().isBlank()) {
+            return "你给的素材里已经有可用信息，先提炼一个最具体的场景来写。";
+        }
+        return "";
     }
 }

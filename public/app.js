@@ -3,11 +3,16 @@ const demoButton = document.querySelector("#demoButton");
 const emptyState = document.querySelector("#emptyState");
 const summaryCards = document.querySelector("#summaryCards");
 const resultSections = ["covers", "posts", "product", "dm"].map(id => document.querySelector(`#${id}`));
+const sourceType = document.querySelector("#sourceType");
 
-let currentResult = null;
+document.querySelectorAll(".mode-tab").forEach(button => {
+  button.addEventListener("click", () => switchMode(button.dataset.mode));
+});
 
 demoButton.addEventListener("click", () => {
+  switchMode("TEXT");
   const values = {
+    sourceText: "我想做一个小红书虚拟电商资料包，用户多是新手，最卡的是不知道发什么内容，也不知道怎么把流量接到商品页。",
     niche: "小红书虚拟资料",
     productName: "小红书虚拟电商实操资料包",
     targetUser: "想做副业的新手",
@@ -24,7 +29,7 @@ demoButton.addEventListener("click", () => {
 
 form.addEventListener("submit", async event => {
   event.preventDefault();
-  const payload = Object.fromEntries(new FormData(form).entries());
+  const payload = buildPayload();
   setLoading(true);
   try {
     const response = await fetch("/api/ai/generate", {
@@ -34,7 +39,6 @@ form.addEventListener("submit", async event => {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "生成失败");
-    currentResult = data;
     renderResult(data);
     await loadHistory();
   } catch (error) {
@@ -43,6 +47,25 @@ form.addEventListener("submit", async event => {
     setLoading(false);
   }
 });
+
+function switchMode(mode) {
+  sourceType.value = mode;
+  document.querySelectorAll(".mode-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.mode === mode);
+  });
+  document.querySelectorAll(".mode-panel").forEach(panel => {
+    panel.classList.toggle("hidden", panel.dataset.panel !== mode);
+  });
+}
+
+function buildPayload() {
+  const data = Object.fromEntries(new FormData(form).entries());
+  if (data.linkNotes && !data.sourceText) {
+    data.sourceText = data.linkNotes;
+  }
+  delete data.linkNotes;
+  return data;
+}
 
 function setLoading(isLoading) {
   const button = form.querySelector(".primary-button");
@@ -57,7 +80,7 @@ function renderResult(result) {
 
   summaryCards.innerHTML = `
     <div class="summary-card"><strong>${result.covers.length}</strong><span>封面方案</span></div>
-    <div class="summary-card"><strong>${result.posts.length}</strong><span>小红书文案</span></div>
+    <div class="summary-card"><strong>${result.posts.length}</strong><span>图文文案</span></div>
     <div class="summary-card"><strong>${result.dmScripts.length}</strong><span>私信话术</span></div>
   `;
 
@@ -69,12 +92,14 @@ function renderResult(result) {
 
 function renderCovers(covers) {
   document.querySelector("#coverResult").innerHTML = covers.map((cover, index) => `
-    <article class="content-card">
-      <div class="tag-row">
-        <span class="tag">封面 ${index + 1}</span>
+    <article class="content-card cover-card">
+      <div class="cover-preview">
+        <span>${cover.coverSubtitle}</span>
+        <strong>${cover.coverTitle}</strong>
+        <em>图喜 AI 封面方案 ${index + 1}</em>
       </div>
+      <div class="tag-row"><span class="tag">封面 ${index + 1}</span></div>
       <h3>${cover.coverTitle}</h3>
-      <p><b>副标题：</b>${cover.coverSubtitle}</p>
       <p><b>视觉：</b>${cover.visualStyle}</p>
       <p><b>排版：</b>${cover.layoutSuggestion}</p>
       <p><b>生图提示词：</b>${cover.imagePrompt}</p>
@@ -104,7 +129,7 @@ function renderPosts(posts) {
 
 function renderProductCopy(copy) {
   document.querySelector("#productCopyResult").innerHTML = `
-    <article class="content-card">
+    <article class="content-card wide-card">
       <h3>${copy.productTitle}</h3>
       <p>${copy.productSubtitle}</p>
       <div class="tag-row">${copy.sellingPoints.map(point => `<span class="tag">${point}</span>`).join("")}</div>

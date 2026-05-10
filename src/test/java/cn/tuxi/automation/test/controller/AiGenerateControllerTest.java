@@ -28,6 +28,8 @@ class AiGenerateControllerTest {
         String body = """
                 {
                   "niche": "小红书虚拟资料",
+                  "sourceType": "LINK",
+                  "sourceLink": "https://example.com/sample-note",
                   "productName": "小红书虚拟电商实操资料包",
                   "targetUser": "想做副业的新手",
                   "sellingPoints": "低成本、可复制、适合新手、自动发货",
@@ -48,6 +50,7 @@ class AiGenerateControllerTest {
                 .andExpect(jsonPath("$.posts", hasSize(3)))
                 .andExpect(jsonPath("$.posts[*].postType", hasItem("流量爆款贴")))
                 .andExpect(jsonPath("$.posts[*].postType", hasItem("信任成交贴")))
+                .andExpect(jsonPath("$.posts[0].content").value(containsString("链接")))
                 .andExpect(jsonPath("$.posts[0].content").value(not(containsString("首先"))))
                 .andExpect(jsonPath("$.posts[0].content").value(not(containsString("综上所述"))))
                 .andExpect(jsonPath("$.productCopy.productTitle").value(containsString("小红书虚拟电商实操资料包")))
