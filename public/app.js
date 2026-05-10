@@ -88,6 +88,9 @@ function switchMode(mode) {
 
 function buildPayload() {
   const data = Object.fromEntries(new FormData(form).entries());
+  data.targetUser = data.targetUser?.trim() || "想做副业的新手";
+  data.sellingPoints = data.sellingPoints?.trim() || "低成本、可复制、适合新手、自动发货";
+  data.painPoint = data.painPoint?.trim() || "不知道发什么内容，也不知道怎么承接成交";
   if (data.linkNotes && !data.sourceText) {
     data.sourceText = data.linkNotes;
   }
