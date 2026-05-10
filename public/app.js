@@ -1,7 +1,20 @@
+let motionAnimate = null;
+let motionStagger = null;
+
+try {
+  const motion = await import("https://esm.sh/framer-motion/dom");
+  motionAnimate = motion.animate;
+  motionStagger = motion.stagger;
+} catch {
+  motionAnimate = null;
+  motionStagger = null;
+}
+
 const form = document.querySelector("#generateForm");
 const demoButton = document.querySelector("#demoButton");
 const emptyState = document.querySelector("#emptyState");
 const summaryCards = document.querySelector("#summaryCards");
+const loadingState = document.querySelector("#loadingState");
 const resultSections = ["covers", "posts", "product", "dm"].map(id => document.querySelector(`#${id}`));
 const sourceType = document.querySelector("#sourceType");
 
@@ -56,6 +69,7 @@ function switchMode(mode) {
   document.querySelectorAll(".mode-panel").forEach(panel => {
     panel.classList.toggle("hidden", panel.dataset.panel !== mode);
   });
+  safeAnimate(".mode-panel:not(.hidden)", { opacity: [0, 1], y: [8, 0] }, { duration: 0.22 });
 }
 
 function buildPayload() {
@@ -68,84 +82,122 @@ function buildPayload() {
 }
 
 function setLoading(isLoading) {
-  const button = form.querySelector(".primary-button");
+  const button = form.querySelector(".generate-button");
   button.disabled = isLoading;
-  button.textContent = isLoading ? "AI 生成中..." : "生成爆款内容";
+  button.querySelector(".button-label").textContent = isLoading ? "正在生成资产..." : "生成爆款内容";
+  button.querySelector(".button-loader").classList.toggle("hidden", !isLoading);
+  loadingState.classList.toggle("hidden", !isLoading);
 }
 
 function renderResult(result) {
   emptyState.classList.add("hidden");
   summaryCards.classList.remove("hidden");
+  summaryCards.classList.add("grid");
   resultSections.forEach(section => section.classList.remove("hidden"));
 
   summaryCards.innerHTML = `
-    <div class="summary-card"><strong>${result.covers.length}</strong><span>封面方案</span></div>
-    <div class="summary-card"><strong>${result.posts.length}</strong><span>图文文案</span></div>
-    <div class="summary-card"><strong>${result.dmScripts.length}</strong><span>私信话术</span></div>
+    ${summaryCard(result.covers.length, "封面方案")}
+    ${summaryCard(result.posts.length, "图文文案")}
+    ${summaryCard(result.dmScripts.length, "私信话术")}
   `;
 
   renderCovers(result.covers);
   renderPosts(result.posts);
   renderProductCopy(result.productCopy);
   renderDmScripts(result.dmScripts);
+  revealAssets();
+}
+
+function summaryCard(count, label) {
+  return `
+    <div class="rounded-2xl border border-white/10 bg-white/[0.07] p-4">
+      <strong class="block text-3xl font-black">${count}</strong>
+      <span class="text-xs font-black text-white/55">${label}</span>
+    </div>
+  `;
 }
 
 function renderCovers(covers) {
   document.querySelector("#coverResult").innerHTML = covers.map((cover, index) => `
-    <article class="content-card cover-card">
-      <div class="cover-preview">
-        <span>${cover.coverSubtitle}</span>
-        <strong>${cover.coverTitle}</strong>
-        <em>图喜 AI 封面方案 ${index + 1}</em>
+    <article class="asset-card">
+      <div class="xhs-cover">
+        <div>
+          <span class="inline-flex rounded-full bg-[#ff2442]/10 px-3 py-1 text-xs font-black text-[#ff2442]">${cover.coverSubtitle}</span>
+        </div>
+        <strong class="block text-3xl font-black leading-tight tracking-tight">${cover.coverTitle}</strong>
+        <div class="text-xs font-black text-muted">AI Cover Plan ${index + 1}</div>
       </div>
-      <div class="tag-row"><span class="tag">封面 ${index + 1}</span></div>
-      <h3>${cover.coverTitle}</h3>
-      <p><b>视觉：</b>${cover.visualStyle}</p>
-      <p><b>排版：</b>${cover.layoutSuggestion}</p>
-      <p><b>生图提示词：</b>${cover.imagePrompt}</p>
-      <p><b>点击逻辑：</b>${cover.reason}</p>
-      <button class="small-button" type="button" onclick="copyText(${JSON.stringify(toCoverText(cover))})">复制封面方案</button>
+      <div class="mt-4 space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-lg font-black">${cover.coverTitle}</h3>
+          <span class="rounded-full bg-black/[0.06] px-3 py-1 text-xs font-black text-muted">封面</span>
+        </div>
+        <p class="text-sm font-semibold leading-6 text-muted"><b class="text-ink">风格：</b>${cover.visualStyle}</p>
+        <p class="text-sm font-semibold leading-6 text-muted"><b class="text-ink">排版：</b>${cover.layoutSuggestion}</p>
+        <p class="text-sm font-semibold leading-6 text-muted"><b class="text-ink">AI Prompt：</b>${cover.imagePrompt}</p>
+        <p class="text-sm font-semibold leading-6 text-muted"><b class="text-ink">点击逻辑：</b>${cover.reason}</p>
+        <div class="flex gap-2 pt-1">
+          <button class="copy-button" type="button" onclick="copyText(${JSON.stringify(toCoverText(cover))})">复制</button>
+          <button class="regen-button" type="button" onclick="regenerate()">重新生成</button>
+        </div>
+      </div>
     </article>
   `).join("");
 }
 
 function renderPosts(posts) {
   document.querySelector("#postResult").innerHTML = posts.map((post, index) => `
-    <article class="content-card">
-      <div class="tag-row">
-        <span class="tag">文案 ${index + 1}</span>
-        <span class="tag">${post.postType}</span>
+    <article class="asset-card">
+      <div class="mb-4 flex items-center justify-between gap-3">
+        <span class="rounded-full bg-[#ff2442]/10 px-3 py-1 text-xs font-black text-[#ff2442]">${post.postType}</span>
+        <span class="text-xs font-black text-muted">文案 ${index + 1}</span>
       </div>
-      <h3>${post.title}</h3>
-      <p><b>开头：</b>${post.hook}</p>
-      <p>${post.content}</p>
-      <p><b>CTA：</b>${post.cta}</p>
-      <div class="tag-row">${post.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
-      <p><b>爆款逻辑：</b>${post.reason}</p>
-      <button class="small-button" type="button" onclick="copyText(${JSON.stringify(toPostText(post))})">复制文案</button>
+      <h3 class="text-xl font-black leading-snug">${post.title}</h3>
+      <p class="mt-4 text-sm font-semibold leading-7 text-muted"><b class="text-ink">开头：</b>${post.hook}</p>
+      <p class="mt-3 text-sm font-semibold leading-7 text-muted">${post.content}</p>
+      <p class="mt-3 text-sm font-semibold leading-7 text-muted"><b class="text-ink">CTA：</b>${post.cta}</p>
+      <div class="mt-4 flex flex-wrap gap-2">${post.tags.map(tag => `<span class="rounded-full bg-black/[0.05] px-3 py-1 text-xs font-black text-muted">${tag}</span>`).join("")}</div>
+      <p class="mt-4 text-sm font-semibold leading-7 text-muted"><b class="text-ink">爆款逻辑：</b>${post.reason}</p>
+      <div class="mt-4 flex gap-2">
+        <button class="copy-button" type="button" onclick="copyText(${JSON.stringify(toPostText(post))})">复制</button>
+        <button class="regen-button" type="button" onclick="regenerate()">重新生成</button>
+      </div>
     </article>
   `).join("");
 }
 
 function renderProductCopy(copy) {
   document.querySelector("#productCopyResult").innerHTML = `
-    <article class="content-card wide-card">
-      <h3>${copy.productTitle}</h3>
-      <p>${copy.productSubtitle}</p>
-      <div class="tag-row">${copy.sellingPoints.map(point => `<span class="tag">${point}</span>`).join("")}</div>
-      <p><b>交付：</b>${copy.deliveryNote}</p>
-      <p><b>风险：</b>${copy.riskNotice}</p>
-      <button class="small-button" type="button" onclick="copyText(${JSON.stringify(toProductText(copy))})">复制商品文案</button>
+    <article class="asset-card">
+      <div class="grid gap-5 lg:grid-cols-[1fr_320px]">
+        <div>
+          <span class="rounded-full bg-black/[0.05] px-3 py-1 text-xs font-black text-muted">商品承接</span>
+          <h3 class="mt-4 text-2xl font-black">${copy.productTitle}</h3>
+          <p class="mt-3 text-sm font-semibold leading-7 text-muted">${copy.productSubtitle}</p>
+          <div class="mt-4 flex flex-wrap gap-2">${copy.sellingPoints.map(point => `<span class="rounded-full bg-[#ff2442]/10 px-3 py-1 text-xs font-black text-[#ff2442]">${point}</span>`).join("")}</div>
+        </div>
+        <div class="rounded-3xl bg-black/[0.04] p-5 text-sm font-semibold leading-7 text-muted">
+          <p><b class="text-ink">交付：</b>${copy.deliveryNote}</p>
+          <p class="mt-3"><b class="text-ink">风险：</b>${copy.riskNotice}</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-2">
+        <button class="copy-button" type="button" onclick="copyText(${JSON.stringify(toProductText(copy))})">复制</button>
+        <button class="regen-button" type="button" onclick="regenerate()">重新生成</button>
+      </div>
     </article>
   `;
 }
 
 function renderDmScripts(scripts) {
   document.querySelector("#dmResult").innerHTML = scripts.map(script => `
-    <article class="script-item">
-      <h3>${script.scene}</h3>
-      <p>${script.message}</p>
-      <button class="small-button" type="button" onclick="copyText(${JSON.stringify(script.message)})">复制话术</button>
+    <article class="asset-card">
+      <span class="rounded-full bg-black/[0.05] px-3 py-1 text-xs font-black text-muted">${script.scene}</span>
+      <p class="mt-4 text-sm font-semibold leading-7 text-muted">${script.message}</p>
+      <div class="mt-4 flex gap-2">
+        <button class="copy-button" type="button" onclick="copyText(${JSON.stringify(script.message)})">复制</button>
+        <button class="regen-button" type="button" onclick="regenerate()">重新生成</button>
+      </div>
     </article>
   `).join("");
 }
@@ -155,20 +207,38 @@ async function loadHistory() {
   const data = await response.json();
   const records = data.records || [];
   document.querySelector("#historyResult").innerHTML = records.length ? records.map(record => `
-    <article class="script-item">
-      <h3>${record.productName}</h3>
-      <p>${record.niche}｜${record.targetUser}</p>
-      <p>${new Date(record.createdAt).toLocaleString()}</p>
+    <article class="asset-card">
+      <h3 class="text-lg font-black">${record.productName}</h3>
+      <p class="mt-2 text-sm font-semibold text-muted">${record.niche}｜${record.targetUser}</p>
+      <p class="mt-3 text-xs font-black text-muted">${new Date(record.createdAt).toLocaleString()}</p>
     </article>
-  `).join("") : `<div class="empty-state small">暂无历史记录</div>`;
+  `).join("") : `<div class="rounded-[28px] border border-black/5 bg-white/60 p-8 text-center text-sm font-bold text-muted">暂无历史记录</div>`;
 }
 
 async function copyText(text) {
   await navigator.clipboard.writeText(text);
 }
 
+function regenerate() {
+  form.requestSubmit();
+}
+
+function revealAssets() {
+  safeAnimate(".result-section:not(.hidden)", { opacity: [0, 1], y: [18, 0] }, { duration: 0.34, delay: motionStagger ? motionStagger(0.05) : 0 });
+  safeAnimate(".asset-card", { opacity: [0, 1], y: [16, 0] }, { duration: 0.28, delay: motionStagger ? motionStagger(0.035) : 0 });
+}
+
+function safeAnimate(selector, keyframes, options) {
+  if (!motionAnimate) return;
+  try {
+    motionAnimate(selector, keyframes, options);
+  } catch {
+    // Framer Motion is progressive enhancement for CDN/offline cases.
+  }
+}
+
 function toCoverText(cover) {
-  return `封面主标题：${cover.coverTitle}\n封面副标题：${cover.coverSubtitle}\n视觉风格：${cover.visualStyle}\n排版建议：${cover.layoutSuggestion}\n生图提示词：${cover.imagePrompt}\n点击逻辑：${cover.reason}`;
+  return `封面主标题：${cover.coverTitle}\n封面副标题：${cover.coverSubtitle}\n视觉风格：${cover.visualStyle}\n排版建议：${cover.layoutSuggestion}\nAI Prompt：${cover.imagePrompt}\n点击逻辑：${cover.reason}`;
 }
 
 function toPostText(post) {
@@ -180,4 +250,5 @@ function toProductText(copy) {
 }
 
 window.copyText = copyText;
+window.regenerate = regenerate;
 loadHistory();

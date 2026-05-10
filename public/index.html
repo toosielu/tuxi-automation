@@ -3,103 +3,110 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>图喜 AI｜小红书爆款内容生成</title>
+    <title>图喜 AI｜小红书爆款内容生成 Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#171717",
+              paper: "#f7f3ec",
+              card: "#fffaf2",
+              xhs: "#ff2442",
+              muted: "#76716a"
+            },
+            boxShadow: {
+              soft: "0 24px 80px rgba(23, 23, 23, 0.08)",
+              glow: "0 18px 60px rgba(255, 36, 66, 0.16)"
+            }
+          }
+        }
+      };
+    </script>
     <link rel="stylesheet" href="/styles.css">
   </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">图</div>
-          <div>
-            <strong>图喜 AI</strong>
-            <span>爆款图文生成器</span>
+  <body class="min-h-screen bg-paper text-ink antialiased">
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+      <div class="absolute left-1/2 top-[-220px] h-[460px] w-[760px] -translate-x-1/2 rounded-full bg-white/70 blur-3xl"></div>
+      <div class="absolute right-[-120px] top-[220px] h-[320px] w-[320px] rounded-full bg-[#ff2442]/10 blur-3xl"></div>
+    </div>
+
+    <header class="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
+      <a class="group flex items-center gap-3" href="#studio" aria-label="图喜 AI">
+        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-ink text-sm font-black text-white shadow-soft transition-transform group-hover:scale-105">图</span>
+        <span>
+          <strong class="block text-base font-black tracking-tight">图喜 AI Studio</strong>
+          <span class="block text-xs font-semibold text-muted">Xiaohongshu Creator Tool</span>
+        </span>
+      </a>
+      <nav class="hidden items-center gap-2 rounded-full border border-black/5 bg-white/55 p-1 text-sm font-bold text-muted shadow-sm backdrop-blur md:flex">
+        <a class="rounded-full px-4 py-2 text-ink" href="#studio">生成台</a>
+        <a class="rounded-full px-4 py-2 hover:text-ink" href="#covers">封面</a>
+        <a class="rounded-full px-4 py-2 hover:text-ink" href="#posts">文案</a>
+        <a class="rounded-full px-4 py-2 hover:text-ink" href="#history">历史</a>
+      </nav>
+      <button class="rounded-full border border-black/10 bg-white/70 px-4 py-2 text-sm font-black shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-white" type="button">
+        Creator
+      </button>
+    </header>
+
+    <main class="mx-auto grid w-full max-w-7xl gap-8 px-5 pb-14 lg:px-8">
+      <section id="studio" class="grid gap-6 pt-4">
+        <div class="mx-auto max-w-4xl text-center">
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-black/5 bg-white/70 px-4 py-2 text-xs font-black uppercase tracking-wide text-muted shadow-sm backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-xhs"></span>
+            AI Studio · Modern SaaS · Content Workspace
           </div>
+          <h1 class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+            生成小红书爆款封面和真人感文案
+          </h1>
+          <p class="mx-auto mt-5 max-w-2xl text-base font-medium leading-8 text-muted">
+            支持文字、图片、链接三种素材输入。一次生成封面方案、爆款文案、商品承接和私信话术。
+          </p>
         </div>
-        <nav class="nav-list">
-          <a class="active" href="#generator">生成台</a>
-          <a href="#covers">封面图方案</a>
-          <a href="#posts">爆款文案</a>
-          <a href="#product">商品承接</a>
-          <a href="#dm">私信话术</a>
-          <a href="#history">历史记录</a>
-        </nav>
-        <div class="sidebar-note">
-          <span>V1</span>
-          <p>文字、图片、链接三种输入方式，生成可复制的小红书封面方案和文案。</p>
-        </div>
-      </aside>
 
-      <main class="main">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Xiaohongshu AI Studio</p>
-            <h1>输入素材，生成可发布的小红书爆款图文</h1>
-          </div>
-          <button id="demoButton" class="ghost-button" type="button">填入演示数据</button>
-        </header>
+        <section class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <form id="generateForm" class="rounded-[32px] border border-black/5 bg-white/80 p-4 shadow-soft backdrop-blur-xl sm:p-6">
+            <input id="sourceType" name="sourceType" type="hidden" value="TEXT">
 
-        <section id="generator" class="generator-layout">
-          <form id="generateForm" class="panel control-panel">
-            <div class="panel-head compact-head">
-              <div>
-                <p class="eyebrow">Create</p>
-                <h2>选择生成方式</h2>
-              </div>
-              <input id="sourceType" name="sourceType" type="hidden" value="TEXT">
-            </div>
-
-            <div class="mode-tabs" role="tablist" aria-label="生成方式">
+            <div class="mb-5 grid grid-cols-3 gap-2 rounded-[24px] bg-black/[0.04] p-1.5">
               <button class="mode-tab active" type="button" data-mode="TEXT">文字生帖子</button>
               <button class="mode-tab" type="button" data-mode="IMAGE">图片生帖子</button>
               <button class="mode-tab" type="button" data-mode="LINK">链接生帖子</button>
             </div>
 
             <div class="mode-panel" data-panel="TEXT">
-              <label>
-                输入原始素材
-                <textarea name="sourceText" rows="5" placeholder="粘贴你已有的资料、想法、产品介绍或爆款参考结构"></textarea>
-              </label>
+              <label class="field-label" for="sourceText">输入原始素材</label>
+              <textarea id="sourceText" name="sourceText" rows="7" class="studio-input min-h-44 resize-y text-[15px]" placeholder="粘贴产品介绍、爆款参考结构、用户痛点、你想表达的想法..."></textarea>
             </div>
 
             <div class="mode-panel hidden" data-panel="IMAGE">
-              <label>
-                上传参考图
-                <input id="imageFile" type="file" accept="image/*">
-              </label>
-              <label>
-                图片内容描述
-                <textarea name="imageNotes" rows="4" placeholder="描述图片里有什么、想模仿哪种封面感觉、产品截图重点是什么"></textarea>
-              </label>
+              <label class="field-label" for="imageFile">上传参考图</label>
+              <input id="imageFile" type="file" accept="image/*" class="studio-input file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-black file:text-white">
+              <label class="field-label mt-4" for="imageNotes">图片内容描述</label>
+              <textarea id="imageNotes" name="imageNotes" rows="5" class="studio-input resize-y" placeholder="描述图片里有什么，想模仿哪种封面感觉，产品截图重点是什么..."></textarea>
             </div>
 
             <div class="mode-panel hidden" data-panel="LINK">
-              <label>
-                参考链接
-                <input name="sourceLink" placeholder="粘贴小红书、公众号、网页或商品页链接">
-              </label>
-              <label>
-                链接补充说明
-                <textarea name="linkNotes" rows="3" placeholder="说明你想借鉴它的标题、结构、封面还是选题角度"></textarea>
-              </label>
+              <label class="field-label" for="sourceLink">参考链接</label>
+              <input id="sourceLink" name="sourceLink" class="studio-input" placeholder="粘贴小红书、网页、商品页或爆款参考链接">
+              <label class="field-label mt-4" for="linkNotes">链接补充说明</label>
+              <textarea id="linkNotes" name="linkNotes" rows="5" class="studio-input resize-y" placeholder="说明你想借鉴标题、结构、封面、选题角度还是成交话术..."></textarea>
             </div>
 
-            <div class="form-grid">
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
               <label>
-                目标赛道
-                <input name="niche" required placeholder="AI 提效、商业副业、教辅、母婴育儿">
+                <span class="field-label">目标赛道</span>
+                <input name="niche" required class="studio-input" placeholder="AI 提效 / 母婴 / 教辅">
               </label>
               <label>
-                产品名称
-                <input name="productName" required placeholder="小红书虚拟电商实操资料包">
+                <span class="field-label">产品名称</span>
+                <input name="productName" required class="studio-input" placeholder="虚拟电商资料包">
               </label>
               <label>
-                目标人群
-                <input name="targetUser" required placeholder="想做副业的新手">
-              </label>
-              <label>
-                内容目的
-                <select name="goal" required>
+                <span class="field-label">内容目的</span>
+                <select name="goal" required class="studio-input">
                   <option>引流涨粉</option>
                   <option>私信咨询</option>
                   <option>店铺点击</option>
@@ -109,86 +116,119 @@
               </label>
             </div>
 
-            <label>
-              产品卖点
-              <textarea name="sellingPoints" required rows="3" placeholder="低成本、可复制、适合新手、自动发货"></textarea>
-            </label>
+            <details class="mt-5 rounded-[24px] border border-black/5 bg-black/[0.025] p-4">
+              <summary class="cursor-pointer text-sm font-black text-muted">高级选项</summary>
+              <div class="mt-4 grid gap-4 md:grid-cols-2">
+                <label>
+                  <span class="field-label">目标人群</span>
+                  <input name="targetUser" required class="studio-input" placeholder="想做副业的新手">
+                </label>
+                <label>
+                  <span class="field-label">风格选择</span>
+                  <select name="style" class="studio-input">
+                    <option selected>干货型</option>
+                    <option>结果型</option>
+                    <option>避坑型</option>
+                    <option>反差型</option>
+                    <option>真实记录型</option>
+                    <option>清单型</option>
+                  </select>
+                </label>
+                <label class="md:col-span-2">
+                  <span class="field-label">产品卖点</span>
+                  <textarea name="sellingPoints" required rows="3" class="studio-input resize-y" placeholder="低成本、可复制、适合新手、自动发货"></textarea>
+                </label>
+                <label class="md:col-span-2">
+                  <span class="field-label">当前卡点</span>
+                  <input name="painPoint" class="studio-input" placeholder="不知道发什么，也不知道怎么承接成交">
+                </label>
+              </div>
+            </details>
 
-            <div class="field-row">
-              <label>
-                风格选择
-                <select name="style">
-                  <option selected>干货型</option>
-                  <option>结果型</option>
-                  <option>避坑型</option>
-                  <option>反差型</option>
-                  <option>真实记录型</option>
-                  <option>清单型</option>
-                </select>
-              </label>
-              <label>
-                当前卡点
-                <input name="painPoint" placeholder="不知道发什么，也不知道怎么承接成交">
-              </label>
+            <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button class="generate-button" type="submit">
+                <span class="button-label">生成爆款内容</span>
+                <span class="button-loader hidden"></span>
+              </button>
+              <button id="demoButton" class="rounded-[18px] border border-black/10 bg-white px-5 py-4 text-sm font-black shadow-sm transition hover:-translate-y-0.5 hover:bg-black hover:text-white" type="button">
+                填入演示数据
+              </button>
             </div>
-
-            <button class="primary-button" type="submit">生成爆款内容</button>
           </form>
 
-          <section class="panel output-panel">
-            <div class="panel-head">
-              <p class="eyebrow">Output</p>
-              <h2>生成结果</h2>
+          <aside class="rounded-[32px] border border-black/5 bg-ink p-6 text-white shadow-soft">
+            <p class="text-xs font-black uppercase tracking-wide text-white/50">Output Preview</p>
+            <h2 class="mt-3 text-2xl font-black leading-tight">创作资产会在这里生成</h2>
+            <div id="emptyState" class="mt-6 rounded-[24px] border border-white/10 bg-white/[0.06] p-5 text-sm font-semibold leading-7 text-white/65">
+              生成后会得到 3 个封面方案、3 条文案、商品承接和 5 条私信话术。
             </div>
-            <div id="emptyState" class="empty-state">
-              左侧填写后，一次生成封面图方案、爆款文案、商品承接和私信话术。
-            </div>
-            <div id="summaryCards" class="summary-cards hidden"></div>
-          </section>
+            <div id="summaryCards" class="mt-6 hidden grid-cols-3 gap-3"></div>
+          </aside>
         </section>
+      </section>
 
-        <section id="covers" class="result-band hidden">
-          <div class="section-title">
-            <p class="eyebrow">Covers</p>
-            <h2>爆款封面图方案</h2>
+      <section id="loadingState" class="hidden grid gap-4 md:grid-cols-3">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </section>
+
+      <section id="covers" class="result-section hidden">
+        <div class="section-heading">
+          <span>01</span>
+          <div>
+            <p>AI Design Workspace</p>
+            <h2>爆款封面方案</h2>
           </div>
-          <div id="coverResult" class="card-grid"></div>
-        </section>
+        </div>
+        <div id="coverResult" class="grid gap-5 md:grid-cols-3"></div>
+      </section>
 
-        <section id="posts" class="result-band hidden">
-          <div class="section-title">
-            <p class="eyebrow">Posts</p>
-            <h2>可复制小红书文案</h2>
+      <section id="posts" class="result-section hidden">
+        <div class="section-heading">
+          <span>02</span>
+          <div>
+            <p>Copy Assets</p>
+            <h2>AI 文案</h2>
           </div>
-          <div id="postResult" class="card-grid"></div>
-        </section>
+        </div>
+        <div id="postResult" class="grid gap-5 lg:grid-cols-3"></div>
+      </section>
 
-        <section id="product" class="result-band hidden">
-          <div class="section-title">
-            <p class="eyebrow">Product</p>
-            <h2>商品承接文案</h2>
+      <section id="product" class="result-section hidden">
+        <div class="section-heading">
+          <span>03</span>
+          <div>
+            <p>Conversion</p>
+            <h2>商品承接</h2>
           </div>
-          <div id="productCopyResult"></div>
-        </section>
+        </div>
+        <div id="productCopyResult"></div>
+      </section>
 
-        <section id="dm" class="result-band hidden">
-          <div class="section-title">
-            <p class="eyebrow">DM</p>
-            <h2>私信引导话术</h2>
+      <section id="dm" class="result-section hidden">
+        <div class="section-heading">
+          <span>04</span>
+          <div>
+            <p>Private Domain</p>
+            <h2>私信话术</h2>
           </div>
-          <div id="dmResult" class="script-list"></div>
-        </section>
+        </div>
+        <div id="dmResult" class="grid gap-4 md:grid-cols-2 xl:grid-cols-5"></div>
+      </section>
 
-        <section id="history" class="result-band">
-          <div class="section-title">
-            <p class="eyebrow">History</p>
+      <section id="history" class="result-section">
+        <div class="section-heading">
+          <span>H</span>
+          <div>
+            <p>History</p>
             <h2>历史记录</h2>
           </div>
-          <div id="historyResult" class="script-list"></div>
-        </section>
-      </main>
-    </div>
+        </div>
+        <div id="historyResult" class="grid gap-4 md:grid-cols-3"></div>
+      </section>
+    </main>
 
-    <script src="/app.js"></script>
+    <script type="module" src="/app.js"></script>
   </body>
 </html>
