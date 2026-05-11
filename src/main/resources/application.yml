@@ -12,3 +12,9 @@ tuxi:
   persistence:
     provider: supabase
     enabled: false
+  ai:
+    provider: ${TUXI_AI_PROVIDER:local}
+    api-key: ${TUXI_AI_API_KEY:${OPENAI_API_KEY:}}
+    base-url: ${TUXI_AI_BASE_URL:https://api.openai.com/v1}
+    model: ${TUXI_AI_MODEL:gpt-4o-mini}
+    timeout-seconds: ${TUXI_AI_TIMEOUT_SECONDS:60}

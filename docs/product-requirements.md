@@ -171,13 +171,42 @@ V1 先内置这些结构：
 
 目标：把当前模板生成升级为真实 AI 生成。
 
-建议做法：
+当前实现：
 
-1. 先抽象 `AiContentProvider` 接口
+1. 已抽象 `AiContentProvider` 接口
 2. 默认保留本地模板生成，避免没有 API Key 时系统不可用
-3. 增加 OpenAI/SiliconFlow/DeepSeek 等模型接入位置
-4. 使用结构化 JSON 输出
-5. 对模型返回做兜底校验
+3. 已增加 OpenAI-compatible Provider，可接 OpenAI、DeepSeek、SiliconFlow 等兼容 `/chat/completions` 的模型
+4. 模型输出使用结构化 JSON
+5. 模型调用失败时自动回退到本地模板 Provider
+
+配置方式：
+
+```text
+TUXI_AI_PROVIDER=openai-compatible
+TUXI_AI_API_KEY=你的模型APIKey
+TUXI_AI_BASE_URL=https://api.openai.com/v1
+TUXI_AI_MODEL=gpt-4o-mini
+```
+
+如果使用 DeepSeek：
+
+```text
+TUXI_AI_BASE_URL=https://api.deepseek.com/v1
+TUXI_AI_MODEL=deepseek-chat
+```
+
+如果使用 SiliconFlow：
+
+```text
+TUXI_AI_BASE_URL=https://api.siliconflow.cn/v1
+TUXI_AI_MODEL=Qwen/Qwen2.5-72B-Instruct
+```
+
+素材库要求见：
+
+```text
+docs/material-library-format.md
+```
 
 ### 第三优先级：封面模板生成器
 
@@ -266,4 +295,3 @@ V1.1 支持：
 - 不同赛道生成结果有差异
 - 同一产品多次生成不会高度重复
 - 输出 JSON 稳定，不破坏前端展示
-
