@@ -35,6 +35,7 @@ public class AiGenerateServiceImpl implements AiGenerateService {
         GenerateResult result = new GenerateResult(
                 id,
                 content.covers(),
+                content.postImages(),
                 content.posts(),
                 content.productCopy(),
                 content.dmScripts(),
@@ -47,6 +48,7 @@ public class AiGenerateServiceImpl implements AiGenerateService {
                 text(request.productName(), "虚拟资料包"),
                 text(request.targetUser(), "想做副业的新手"),
                 content.covers(),
+                content.postImages(),
                 content.posts(),
                 content.productCopy(),
                 content.dmScripts(),

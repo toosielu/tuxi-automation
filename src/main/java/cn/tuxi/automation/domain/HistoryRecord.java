@@ -9,6 +9,7 @@ public record HistoryRecord(
         String productName,
         String targetUser,
         List<CoverPlan> generatedCovers,
+        List<PostImagePlan> generatedPostImages,
         List<XiaohongshuPost> generatedPosts,
         ProductCopy productCopy,
         List<DmScript> dmScripts,

@@ -47,6 +47,8 @@ class AiGenerateControllerTest {
                 .andExpect(jsonPath("$.covers", hasSize(3)))
                 .andExpect(jsonPath("$.covers[0].coverTitle").value(containsString("新手")))
                 .andExpect(jsonPath("$.covers[0].imagePrompt").exists())
+                .andExpect(jsonPath("$.postImages", hasSize(3)))
+                .andExpect(jsonPath("$.postImages[0].imagePrompt").exists())
                 .andExpect(jsonPath("$.posts", hasSize(3)))
                 .andExpect(jsonPath("$.posts[*].postType", hasItem("流量爆款贴")))
                 .andExpect(jsonPath("$.posts[*].postType", hasItem("信任成交贴")))

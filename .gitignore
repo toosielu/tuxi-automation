@@ -5,3 +5,5 @@ node_modules/
 logs/
 .m2/
 target/
+.next/
+*.tsbuildinfo

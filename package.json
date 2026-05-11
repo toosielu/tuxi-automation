@@ -5,7 +5,10 @@
   "description": "小红书虚拟电商自动化成交系统 MVP",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build",
+    "web:typecheck": "npm --prefix web run typecheck"
   },
   "engines": {
     "node": ">=18"

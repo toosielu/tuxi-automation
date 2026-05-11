@@ -108,7 +108,7 @@ public class OpenAiCompatibleAiContentProvider implements AiContentProvider {
                 1. 只输出 JSON，不要解释，不要 Markdown。
                 2. 文案像真人经验分享，不要出现“首先、其次、综上、作为AI”等 AI 腔。
                 3. 不夸大收益，不承诺暴富，不诱导违规导流。
-                4. 每次输出 3 个封面方案、3 条帖子、1 组商品承接、5 条私信话术。
+                4. 每次输出 3 个封面方案、3 个帖子配图方案、3 条帖子、1 组商品承接、5 条私信话术。
                 5. 3 条帖子必须包含 2 条“流量爆款贴”和 1 条“信任成交贴”。
                 6. 标题要短，开头要有场景感，正文要具体，CTA 要轻。
 
@@ -121,6 +121,17 @@ public class OpenAiCompatibleAiContentProvider implements AiContentProvider {
                       "visualStyle": "",
                       "layoutSuggestion": "",
                       "imagePrompt": "",
+                      "reason": ""
+                    }
+                  ],
+                  "postImages": [
+                    {
+                      "imageTitle": "",
+                      "imageSubtitle": "",
+                      "visualStyle": "",
+                      "layoutSuggestion": "",
+                      "imagePrompt": "",
+                      "matchedPostType": "流量爆款贴",
                       "reason": ""
                     }
                   ],

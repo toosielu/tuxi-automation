@@ -66,6 +66,8 @@ class OpenAiCompatibleAiContentProviderTest {
         ));
 
         assertThat(content.covers()).hasSize(3);
+        assertThat(content.postImages()).hasSize(3);
+        assertThat(content.postImages().get(0).imagePrompt()).contains("帖子配图");
         assertThat(content.posts()).hasSize(3);
         assertThat(content.posts().get(0).postType()).isEqualTo("流量爆款贴");
         assertThat(content.posts().get(0).title()).contains("先别");
@@ -80,6 +82,11 @@ class OpenAiCompatibleAiContentProviderTest {
                     {"coverTitle":"副业新手先别乱买提示词","coverSubtitle":"3个能当天用的场景","visualStyle":"白底红字+截图感","layoutSuggestion":"大标题+场景标签+资料截图","imagePrompt":"1:1小红书封面，白底，红色重点字，AI提示词包截图","reason":"先别句式有避坑感，容易吸引新手"},
                     {"coverTitle":"我把提示词拆成了这张表","coverSubtitle":"收藏后直接照着改","visualStyle":"表格截图感","layoutSuggestion":"左标题右表格","imagePrompt":"小红书干货封面，表格，便签，干净","reason":"清单感强，适合收藏"},
                     {"coverTitle":"AI味太重，通常错在这句","coverSubtitle":"改完更像真人","visualStyle":"对比批注感","layoutSuggestion":"错误写法vs改后写法","imagePrompt":"左右对比封面，手写批注，少量红色","reason":"对比制造点击理由"}
+                  ],
+                  "postImages": [
+                    {"imageTitle":"今天先测这1条","imageSubtitle":"新手也能照着发","visualStyle":"备忘录截图感","layoutSuggestion":"清单+资料截图+三步标签","imagePrompt":"小红书帖子配图，1:1，备忘录截图风格，AI提示词包资料缩略图","matchedPostType":"流量爆款贴","reason":"真实执行感强"},
+                    {"imageTitle":"错误写法/改后写法","imageSubtitle":"一眼看懂差别","visualStyle":"左右对比","layoutSuggestion":"左错右对，中间箭头","imagePrompt":"小红书帖子配图，1:1，左右对比，手写批注","matchedPostType":"流量爆款贴","reason":"对比制造停留"},
+                    {"imageTitle":"适合谁/怎么用","imageSubtitle":"下单前先看","visualStyle":"说明卡","layoutSuggestion":"人群+步骤+风险提示","imagePrompt":"小红书帖子配图，1:1，产品说明卡，白底红色标签","matchedPostType":"信任成交贴","reason":"降低硬广感"}
                   ],
                   "posts": [
                     {"postType":"流量爆款贴","title":"副业新手做AI提示词，先别急着卖课","hook":"我发现很多人不是不会用AI，是一上来就把内容写得太像说明书。","content":"先把一个真实场景讲清楚：你是谁、卡在哪、这条提示词能帮你省哪一步。这样写出来更像经验，不像广告。","cta":"想要这张提示词拆解表，可以留言测试。","tags":["#AI提示词","#小红书运营","#副业"],"reason":"痛点明确，CTA轻，适合引流"},

@@ -4,6 +4,7 @@ import cn.tuxi.automation.domain.AiGeneratedContent;
 import cn.tuxi.automation.domain.CoverPlan;
 import cn.tuxi.automation.domain.DmScript;
 import cn.tuxi.automation.domain.GenerateRequest;
+import cn.tuxi.automation.domain.PostImagePlan;
 import cn.tuxi.automation.domain.ProductCopy;
 import cn.tuxi.automation.domain.ViralContentTemplate;
 import cn.tuxi.automation.domain.XiaohongshuPost;
@@ -42,9 +43,42 @@ public class LocalTemplateAiContentProvider implements AiContentProvider {
 
         return new AiGeneratedContent(
                 buildCovers(niche, productName, targetUser, style, selectedTemplate),
+                buildPostImages(niche, productName, targetUser, selectedTemplate),
                 buildPosts(niche, productName, targetUser, goal, painPoint, sourceContext, selectedTemplate),
                 buildProductCopy(productName, targetUser, sellingPoints, selectedTemplate),
                 buildDmScripts(productName)
+        );
+    }
+
+    private List<PostImagePlan> buildPostImages(String niche, String productName, String targetUser, ViralContentTemplate template) {
+        return List.of(
+                new PostImagePlan(
+                        "今天先测这 1 条",
+                        targetUserShort(targetUser) + "也能照着发",
+                        "真实备忘录 + 浅色便签 + 轻量产品截图",
+                        "画面中心放一张待发布笔记清单，右下角放" + productName + "资料缩略图，底部放 3 个步骤标签",
+                        "小红书帖子配图，1:1，真实手机备忘录截图风格，浅米色背景，红色重点字，展示一张内容测试清单和虚拟资料包缩略图，适合" + niche,
+                        "流量爆款贴",
+                        "画面像真实执行记录，比硬广更容易被收藏。结构参考：" + template.bodyPattern()
+                ),
+                new PostImagePlan(
+                        "错误写法 / 改后写法",
+                        "一眼看懂哪里不对",
+                        "左右对比 + 手写批注 + 小红书红高亮",
+                        "左侧放错误标题和正文开头，右侧放改后版本，中间用箭头连接，顶部放一句结论",
+                        "小红书帖子配图，1:1，左右对比排版，手写批注，红色圈重点，展示文案修改前后对比，干净高级",
+                        "流量爆款贴",
+                        "对比图能快速制造停留理由，也方便用户截图收藏。"
+                ),
+                new PostImagePlan(
+                        "适合谁 / 怎么用",
+                        "下单前先看这张",
+                        "产品说明卡 + 三步流程 + 风险提示",
+                        "上方写适合人群，中间写 3 步使用流程，下方写不承诺收益的轻提示",
+                        "小红书帖子配图，1:1，知识付费产品说明卡，白底黑字，少量红色标签，展示适合人群、使用流程、风险提醒",
+                        "信任成交贴",
+                        "成交型配图先解释适用场景，能减少硬推感。"
+                )
         );
     }
 
