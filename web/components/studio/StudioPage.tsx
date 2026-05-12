@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { generateContent } from "@/lib/api";
-import { downloadSquareImage } from "@/lib/download-cover";
-import type { CoverPlan, GenerateRequest, GenerateResult, PostImagePlan, XiaohongshuPost } from "@/lib/types";
+import { generateContent, generateImage } from "@/lib/api";
+import { downloadDataUrl, downloadSquareImage } from "@/lib/download-cover";
+import type { CoverPlan, GeneratedImage, GenerateRequest, GenerateResult, PostImagePlan, XiaohongshuPost } from "@/lib/types";
 
 const initialForm: GenerateRequest = {
   sourceType: "TEXT",
@@ -27,6 +27,8 @@ export function StudioPage() {
   const [form, setForm] = useState<GenerateRequest>(initialForm);
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageLoadingKey, setImageLoadingKey] = useState("");
+  const [generatedImages, setGeneratedImages] = useState<Record<string, GeneratedImage>>({});
   const [toast, setToast] = useState("");
 
   const hasResult = Boolean(result);
@@ -56,6 +58,24 @@ export function StudioPage() {
   async function copyText(text: string) {
     await navigator.clipboard.writeText(text);
     showToast("已复制");
+  }
+
+  async function onGenerateImage(key: string, prompt: string, imageType: string) {
+    setImageLoadingKey(key);
+    try {
+      const image = await generateImage({
+        prompt,
+        niche: form.niche,
+        imageType,
+        style: form.style
+      });
+      setGeneratedImages((current) => ({ ...current, [key]: image }));
+      showToast("AI 图片已生成");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "生图失败");
+    } finally {
+      setImageLoadingKey("");
+    }
   }
 
   function showToast(message: string) {
@@ -185,6 +205,9 @@ export function StudioPage() {
                       postImage={item.postImage}
                       post={item.post}
                       onCopy={copyText}
+                      onGenerateImage={onGenerateImage}
+                      imageLoadingKey={imageLoadingKey}
+                      generatedImages={generatedImages}
                     />
                   ))}
                 </motion.div>
@@ -252,14 +275,24 @@ function ResultCard({
   cover,
   postImage,
   post,
-  onCopy
+  onCopy,
+  onGenerateImage,
+  imageLoadingKey,
+  generatedImages
 }: {
   index: number;
   cover: CoverPlan;
   postImage?: PostImagePlan;
   post?: XiaohongshuPost;
   onCopy: (text: string) => void;
+  onGenerateImage: (key: string, prompt: string, imageType: string) => void;
+  imageLoadingKey: string;
+  generatedImages: Record<string, GeneratedImage>;
 }) {
+  const coverKey = `cover-${index}`;
+  const postImageKey = `post-image-${index}`;
+  const generatedCover = generatedImages[coverKey];
+  const generatedPostImage = generatedImages[postImageKey];
   const copyPayload = [
     `标题：${post?.title ?? cover.coverTitle}`,
     "",
@@ -274,7 +307,7 @@ function ResultCard({
 
   return (
     <motion.article layout className="group rounded-studio border border-line bg-white/78 p-4 shadow-soft backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white">
-      <Preview title={cover.coverTitle} subtitle={cover.coverSubtitle} badge={`方案 ${index + 1}`} />
+      <Preview title={cover.coverTitle} subtitle={cover.coverSubtitle} badge={`方案 ${index + 1}`} imageUrl={generatedCover?.dataUrl} />
       <div className="mt-4 space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -283,6 +316,9 @@ function ResultCard({
           </div>
         </div>
         <Info label="封面 Prompt" value={cover.imagePrompt} />
+        {generatedPostImage ? (
+          <img src={generatedPostImage.dataUrl} alt="AI 生成帖子配图" className="aspect-square w-full rounded-[24px] border border-line object-cover" />
+        ) : null}
         {postImage ? (
           <Info label="帖子配图" value={`${postImage.imageTitle}｜${postImage.imagePrompt}`} />
         ) : null}
@@ -301,12 +337,34 @@ function ResultCard({
           </Button>
           <Button size="sm" variant="outline" onClick={() => downloadSquareImage(cover, `tuxi-cover-${index + 1}.png`)}>
             <Download className="h-4 w-4" />
-            下载封面
+            模板封面
           </Button>
+          <Button size="sm" variant="outline" disabled={imageLoadingKey === coverKey} onClick={() => onGenerateImage(coverKey, cover.imagePrompt, "小红书爆款封面")}>
+            {imageLoadingKey === coverKey ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImageIcon className="h-4 w-4" />}
+            AI 生封面
+          </Button>
+          {generatedCover ? (
+            <Button size="sm" variant="outline" onClick={() => downloadDataUrl(generatedCover.dataUrl, `tuxi-ai-cover-${index + 1}.png`)}>
+              <Download className="h-4 w-4" />
+              下载 AI 封面
+            </Button>
+          ) : null}
+          {postImage ? (
+            <Button size="sm" variant="outline" disabled={imageLoadingKey === postImageKey} onClick={() => onGenerateImage(postImageKey, postImage.imagePrompt, "小红书帖子配图")}>
+              {imageLoadingKey === postImageKey ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImageIcon className="h-4 w-4" />}
+              AI 生配图
+            </Button>
+          ) : null}
           {postImage ? (
             <Button size="sm" variant="outline" onClick={() => downloadSquareImage(postImage, `tuxi-post-image-${index + 1}.png`)}>
               <Download className="h-4 w-4" />
-              下载配图
+              模板配图
+            </Button>
+          ) : null}
+          {generatedPostImage ? (
+            <Button size="sm" variant="outline" onClick={() => downloadDataUrl(generatedPostImage.dataUrl, `tuxi-ai-post-image-${index + 1}.png`)}>
+              <Download className="h-4 w-4" />
+              下载 AI 配图
             </Button>
           ) : null}
         </div>
@@ -315,17 +373,25 @@ function ResultCard({
   );
 }
 
-function Preview({ title, subtitle, badge }: { title: string; subtitle: string; badge: string }) {
+function Preview({ title, subtitle, badge, imageUrl }: { title: string; subtitle: string; badge: string; imageUrl?: string }) {
   return (
-    <div className="aspect-square rounded-[26px] border border-line bg-[linear-gradient(135deg,#fffdf8,#fff3e2_62%,#ffe7ec)] p-5">
-      <div className="flex items-center justify-between">
+    <div className="relative aspect-square overflow-hidden rounded-[26px] border border-line bg-[linear-gradient(135deg,#fffdf8,#fff3e2_62%,#ffe7ec)] p-5">
+      {imageUrl ? (
+        <img src={imageUrl} alt="AI 生成小红书封面" className="absolute inset-0 h-full w-full object-cover" />
+      ) : null}
+      <div className={imageUrl ? "absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/35" : ""} />
+      <div className="relative flex items-center justify-between">
         <span className="rounded-full bg-xhs/10 px-3 py-1 text-xs font-black text-xhs">{subtitle}</span>
         <span className="text-xs font-black text-muted">{badge}</span>
       </div>
-      <div className="flex h-[72%] items-center">
-        <h3 className="text-4xl font-black leading-tight tracking-tight">{title}</h3>
-      </div>
-      <div className="text-xs font-black text-muted">图喜 AI 生成</div>
+      {!imageUrl ? (
+        <>
+          <div className="relative flex h-[72%] items-center">
+            <h3 className="text-4xl font-black leading-tight tracking-tight">{title}</h3>
+          </div>
+          <div className="relative text-xs font-black text-muted">图喜 AI 生成</div>
+        </>
+      ) : null}
     </div>
   );
 }

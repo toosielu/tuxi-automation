@@ -18,3 +18,11 @@ tuxi:
     base-url: ${TUXI_AI_BASE_URL:https://api.openai.com/v1}
     model: ${TUXI_AI_MODEL:gpt-4o-mini}
     timeout-seconds: ${TUXI_AI_TIMEOUT_SECONDS:60}
+  image:
+    provider: ${TUXI_IMAGE_PROVIDER:disabled}
+    api-key: ${TUXI_IMAGE_API_KEY:${OPENAI_API_KEY:}}
+    base-url: ${TUXI_IMAGE_BASE_URL:https://api.openai.com/v1}
+    model: ${TUXI_IMAGE_MODEL:gpt-image-1.5}
+    size: ${TUXI_IMAGE_SIZE:1024x1024}
+    output-format: ${TUXI_IMAGE_OUTPUT_FORMAT:png}
+    timeout-seconds: ${TUXI_IMAGE_TIMEOUT_SECONDS:120}

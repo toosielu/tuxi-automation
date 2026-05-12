@@ -43,6 +43,13 @@ export function downloadSquareImage(asset: DownloadAsset, filename: string) {
   link.click();
 }
 
+export function downloadDataUrl(dataUrl: string, filename: string) {
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = dataUrl;
+  link.click();
+}
+
 function roundRect(
   ctx: CanvasRenderingContext2D,
   x: number,

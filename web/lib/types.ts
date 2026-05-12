@@ -61,3 +61,20 @@ export type GenerateResult = {
   dmScripts: DmScript[];
   createdAt: string;
 };
+
+export type ImageGenerateRequest = {
+  prompt: string;
+  niche: string;
+  imageType: string;
+  style: string;
+};
+
+export type GeneratedImage = {
+  id: string;
+  prompt: string;
+  imageBase64: string;
+  mimeType: string;
+  dataUrl: string;
+  provider: string;
+  model: string;
+};
